@@ -10,7 +10,8 @@ class Task:
         self.maxTime = maxTime
         self.sourceDevice = sourceDevice
         self.divisionHistory = divisionHistory
-        self.divisionHistory.insert(0, newIndex)
+        if newIndex != None:
+            self.divisionHistory.insert(0, newIndex)
 
     def mockupPrint(self):
         print(str(self.taskID) + ': ' + str(self.divisionHistory))

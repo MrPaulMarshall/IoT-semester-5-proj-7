@@ -1,3 +1,5 @@
+import collections
+
 class Task:
     # computingUnits - ilosc jednostek procesora potrzebnych do wykonania obliczenia
     # maxTime - maksymalna ilosc jednostek czasu na wykonanie
@@ -13,14 +15,22 @@ class Task:
         if newIndex != None:
             self.divisionHistory.insert(0, newIndex)
 
-    def mockupPrint(self):
-        print(str(self.taskID) + ': ' + str(self.divisionHistory))
+    def __repr__(self):
+        return "Id: " + str(self.taskID) + "; Subtask: " + str(self.divisionHistory)
 
     def compute(self, unitsComputed):
-        self.computingUnits -= unitsComputed
-        return self.isCompleted()
-
+        if self.computingUnits > unitsComputed:
+            self.computingUnits -= unitsComputed
+        else:
+            self.computingUnits = 0
+    
     def isCompleted(self):
         if self.computingUnits <= 0:
             return True
         return False
+
+    def __eq__(self, other):
+        return self.taskID == other.taskID and self.divisionHistory == other.divisionHistory
+
+    def __hash__(self):
+        return self.taskID + sum(self.divisionHistory)

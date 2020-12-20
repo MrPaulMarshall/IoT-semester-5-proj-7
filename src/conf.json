@@ -1,0 +1,9 @@
+{
+    "devices": [
+        {"id": "0", "computingPower": 0, "parent": "2"},
+        {"id": "1", "computingPower": 0, "parent": "3"},
+        {"id": "2", "computingPower": 10, "children": ["0"], "parent": "4", "neighbours": ["3"]},
+        {"id": "3", "computingPower": 20, "children": ["1"], "parent": "4", "neighbours": ["2"]},
+        {"id": "4", "computingPower": 100, "children": ["2","3"]}
+    ]   
+}

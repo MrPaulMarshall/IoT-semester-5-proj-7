@@ -18,6 +18,9 @@ class Device:
         self.neighbourDevices = []
         self.childrenDevices = []
 
+    def __repr__(self):
+        return "Id: " + str(self.deviceID) #+ " currentComputingPower: " + str(self.currentComputingPower)
+
     def compute(self):
         # TODO
         pass

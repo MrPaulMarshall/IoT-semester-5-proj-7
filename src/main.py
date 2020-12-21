@@ -32,4 +32,11 @@ def loadConfiguration(path):
 devices = loadConfiguration("conf.json")
 for id in devices:
     print(devices[id],  " parent: [", devices[id].masterDevice , "] children = " , devices[id].childrenDevices, " neighbours: ", devices[id].neighbourDevices)
-    
+
+# main simulation loop
+for i in range(10000):
+    for device in devices:
+        device.compute()
+    if i % 10 == 0:
+        # create task
+        pass

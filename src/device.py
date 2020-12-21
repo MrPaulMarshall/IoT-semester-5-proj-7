@@ -76,13 +76,26 @@ class Device:
 
     def receiveTask(self, task):
         # gdy ma wystarczajaco mocy obliczeniowej na taska to wykonuje go sam
-        if self.currentComputingPower >= task.computingUnits:
+        if self.currentComputingPower*0.8 >= task.computingUnits:
             self.tasksToCompute[task] = task.computingUnits
             self.currentComputingPower -= task.computingUnits
         else:
-            # max 60% zasobow kazdego urzadzenia?
-            chunkSizes = [10,20,30, 100]  # TODO uzaleznic od zmiennych, length <= self + masterDevice + len(neighbours)
-            subtasks = self.divideTask(task, chunkSizes)
+            # chunks = [d.currentComputingPower*0.6 for d in self.neighbourDevices]
+            # max 60% zasobow kazdego urzadzenia
+
+            unitsLeft = task.computingUnits
+            chunks = [self.currentComputingPower*0.6]
+            unitsLeft -= chunks[0]
+
+            for device in self.neighbourDevices:
+                tmp = min(unitsLeft, device.currentComputingPower*0.6)
+                chunks.append(tmp)
+                unitsLeft -= tmp
+
+            if unitsLeft > 0:
+                chunks.append(unitsLeft)
+
+            subtasks = self.divideTask(task, chunks)
             self.tasksToJoin[task] = []
 
             self.receiveTask(subtasks.pop(0))  # pierwszy subtask dla siebie samego, reszte rozsyla innym

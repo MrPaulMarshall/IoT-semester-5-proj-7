@@ -34,6 +34,7 @@ class Device:
                 task.compute(self.tasksToCompute[task])
             finishedTasks = {k: v for k, v in self.tasksToCompute.items() if k.isCompleted()}
             for task in finishedTasks:
+                self.currentComputingPower += self.tasksToCompute[task]  # TODO: added line, need review
                 del self.tasksToCompute[task]
 
                 if len(task.divisionHistory) == 0:
@@ -55,7 +56,9 @@ class Device:
                 parentTask = task
                 break
         self.tasksToJoin[parentTask].append(result)
-        # TODO - jezeli wszystkie subtaski juz sa
+        # TODO jezeli wszystkie subtaski juz sa
+        if len(self.tasksToJoin[parentTask]) == parentTask.divisionHistory[0]:  # TODO to dziala?
+            parentTask.sourceDevice.receiveResults(parentTask)
 
     def divideTask(self, task, chunkSizes):
         if len(chunkSizes) == 0:
@@ -67,10 +70,29 @@ class Device:
         # zwraca liste subtaskow, ktore beda rozslane do innych urzadzen
         return subtasks
 
-    def sendTask(self, task):
-        # TODO
+    def sendTask(self, task, device):
+        # TODO tu zmieniamy divisionHistory taska?
+        device.receiveTask(task)
         pass
 
-    def receiveTask(self):
-        # TODO
-        pass
+    def receiveTask(self, task):
+        # gdy ma wystarczajaco mocy obliczeniowej na taska to wykonuje go sam
+        if self.currentComputingPower >= task.computingUnits:
+            self.tasksToCompute[task] = task.computingUnits
+            self.currentComputingPower -= task.computingUnits
+        else:
+            chunkSizes = [10,20,30, 100]  # TODO uzaleznic od zmiennych, length <= self + masterDevice + len(neighbours)
+            subtasks = self.divideTask(task, chunkSizes)
+
+            self.tasksToJoin[task] = []  # tworzy klucz ktory oczekuje wszystkich subtaskow
+            self.receiveTask(subtasks.pop(0))  # pierwszy subtask dla siebie samego, reszte rozsyla innym
+
+            for device in self.neighbourDevices:  # reszta subtaskow, oprocz ostatniego, dla sasiadow
+                self.sendTask(subtasks.pop(0), device)
+
+            if len(subtasks) > 0:
+                self.sendTask(subtasks.pop(0), self.masterDevice)  # ostatni subtask (jesli istnieje) dla poziomu wyzej
+
+            if len(subtasks) > 0:
+                print("Liczba wygenerowanych subtaskow jest za duza!")
+

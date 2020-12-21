@@ -46,7 +46,7 @@ class Device:
     def createTask(self):
         taskID = randint(1, int(1e8))
         computingUnits = randint(1, 100)
-        maxTime = randint(1, 1000)
+        maxTime = randint(1, 10000)
         return Task(taskID, computingUnits, maxTime, self, [], None)
 
     def receiveResults(self, result):
@@ -55,7 +55,7 @@ class Device:
             if result.task.taskID == task.taskID and result.task.divisionHistory[1:] == task.divisionHistory:
                 parentTask = task
                 break
-        self.tasksToJoin[parentTask].append(result)
+        self.tasksToJoin[parentTask].append(result.task)
         # jezeli wszystkie subtaski juz sa
         if parentTask.computingUnits == sum(map(lambda t: t.computingUnits, self.tasksToJoin[parentTask])):
             parentTask.sourceDevice.receiveResults(parentTask)
@@ -72,7 +72,6 @@ class Device:
 
     def sendTask(self, task, device):
         device.receiveTask(task)
-        pass
 
     def receiveTask(self, task):
         # gdy ma wystarczajaco mocy obliczeniowej na taska to wykonuje go sam
@@ -80,9 +79,7 @@ class Device:
             self.tasksToCompute[task] = task.computingUnits
             self.currentComputingPower -= task.computingUnits
         else:
-            # chunks = [d.currentComputingPower*0.6 for d in self.neighbourDevices]
             # max 60% zasobow kazdego urzadzenia
-
             unitsLeft = task.computingUnits
             chunks = [self.currentComputingPower*0.6]
             unitsLeft -= chunks[0]
@@ -96,7 +93,7 @@ class Device:
                 chunks.append(unitsLeft)
 
             subtasks = self.divideTask(task, chunks)
-            self.tasksToJoin[task] = []
+            self.tasksToJoin[task] = []  # TODO
 
             self.receiveTask(subtasks.pop(0))  # pierwszy subtask dla siebie samego, reszte rozsyla innym
 

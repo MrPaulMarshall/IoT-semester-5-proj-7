@@ -1,8 +1,6 @@
 from device import Device
 import json
 
-# print("JEBAC PIS")
-
 #Funckja przyjmuje ścierzkę do pliku zwraca słownik {"id": obiekt device}
 def loadConfiguration(path):
     allDevices = {}
@@ -33,10 +31,13 @@ devices = loadConfiguration("conf.json")
 for id in devices:
     print(devices[id],  " parent: [", devices[id].masterDevice , "] children = " , devices[id].childrenDevices, " neighbours: ", devices[id].neighbourDevices)
 
+
+cameras = [devices['0'], devices['1']]
+
 # main simulation loop
-for i in range(10000):
-    for device in devices:
-        device.compute()
+for i in range(1000):
+    for id in devices:
+        devices[id].compute()
     if i % 10 == 0:
-        # create task
-        pass
+        for camera in cameras:
+            camera.sendTask(camera.createTask(), camera.masterDevice)

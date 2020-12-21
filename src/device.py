@@ -56,8 +56,8 @@ class Device:
                 parentTask = task
                 break
         self.tasksToJoin[parentTask].append(result)
-        # TODO jezeli wszystkie subtaski juz sa
-        if len(self.tasksToJoin[parentTask]) == parentTask.divisionHistory[0]:  # TODO to dziala?
+        # jezeli wszystkie subtaski juz sa
+        if parentTask.computingUnits == sum(map(lambda t: t.computingUnits, self.tasksToJoin[parentTask])):
             parentTask.sourceDevice.receiveResults(parentTask)
 
     def divideTask(self, task, chunkSizes):
@@ -71,7 +71,6 @@ class Device:
         return subtasks
 
     def sendTask(self, task, device):
-        # TODO tu zmieniamy divisionHistory taska?
         device.receiveTask(task)
         pass
 
@@ -81,10 +80,11 @@ class Device:
             self.tasksToCompute[task] = task.computingUnits
             self.currentComputingPower -= task.computingUnits
         else:
+            # max 60% zasobow kazdego urzadzenia?
             chunkSizes = [10,20,30, 100]  # TODO uzaleznic od zmiennych, length <= self + masterDevice + len(neighbours)
             subtasks = self.divideTask(task, chunkSizes)
+            self.tasksToJoin[task] = []
 
-            self.tasksToJoin[task] = []  # tworzy klucz ktory oczekuje wszystkich subtaskow
             self.receiveTask(subtasks.pop(0))  # pierwszy subtask dla siebie samego, reszte rozsyla innym
 
             for device in self.neighbourDevices:  # reszta subtaskow, oprocz ostatniego, dla sasiadow

@@ -11,11 +11,11 @@ class Device:
     #   dzielnica -> miasto
     #   miasto -> cloud
 
-    def __init__(self, deviceID, computingPower):
+    def __init__(self, deviceID, computingPower, masterDevice):
         self.deviceID = deviceID
         self.maxComputingPower = computingPower
         self.currentComputingPower = computingPower
-        self.masterDevice = None
+        self.masterDevice = masterDevice
         self.neighbourDevices = []
         self.childrenDevices = []
 

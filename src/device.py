@@ -11,7 +11,7 @@ class Device:
     #   dzielnica -> miasto
     #   miasto -> cloud
 
-    def __init__(self, deviceID, computingPower):
+    def __init__(self, deviceID, computingPower, masterDevice):
         """Tworzy nowe urządzenie\n
         Parametry: 
         deviceID (string): Unikalne ID urządzenie\n
@@ -20,7 +20,7 @@ class Device:
         self.deviceID = deviceID
         self.maxComputingPower = computingPower
         self.currentComputingPower = computingPower
-        self.masterDevice = None
+        self.masterDevice = masterDevice
         self.neighbourDevices = []
         self.childrenDevices = []
 

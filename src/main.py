@@ -1,4 +1,5 @@
 from device import Device
+from conf_loader import *
 import json
 
 #Funckja przyjmuje ścierzkę do pliku zwraca słownik {"id": obiekt device}
@@ -32,17 +33,13 @@ def loadConfiguration(path):
     return allDevices
     
 
-
-devices = loadConfiguration("configurations/conf4.json")
+devices = {}
+load_configuration("conf2.json", devices)
 for id in devices:
     print(devices[id],  " parent: [", devices[id].masterDevice , "] children = " , devices[id].childrenDevices, " neighbours: ", devices[id].neighbourDevices)
 
 
-cameras = []
-for id in devices:
-    
-    if devices[id].maxComputingPower == 0:
-        cameras.append(devices[id])
+cameras = [devices[25], devices[26]]
 
 print("--------SIMULATION--------")
 

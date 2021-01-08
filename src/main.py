@@ -3,6 +3,12 @@ import json
 
 #Funckja przyjmuje ścierzkę do pliku zwraca słownik {"id": obiekt device}
 def loadConfiguration(path):
+    """
+    Funkcja przyjmuje plik JSON. Zwraca słownik z konfiguracją urządzeń.\n
+    Paramatry:
+    path (string): ścieżka do pliku JSON\n
+    Zwraca: słownik {"id", Device}
+    """
     allDevices = {}
     with open(path) as json_file:
         data = json.load(json_file)
@@ -27,12 +33,16 @@ def loadConfiguration(path):
     
 
 
-devices = loadConfiguration("conf.json")
+devices = loadConfiguration("configurations/conf4.json")
 for id in devices:
     print(devices[id],  " parent: [", devices[id].masterDevice , "] children = " , devices[id].childrenDevices, " neighbours: ", devices[id].neighbourDevices)
 
 
-cameras = [devices['0'], devices['1']]
+cameras = []
+for id in devices:
+    
+    if devices[id].maxComputingPower == 0:
+        cameras.append(devices[id])
 
 print("--------SIMULATION--------")
 

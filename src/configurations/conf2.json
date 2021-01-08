@@ -1,0 +1,18 @@
+{
+    "devices": [
+        {"id": "kamera1", "computingPower": 0, "parent": "router1"},
+        {"id": "kamera2", "computingPower": 0, "parent": "router1"},
+        {"id": "kamera3", "computingPower": 0, "parent": "router1"},
+        {"id": "kamera4", "computingPower": 0, "parent": "router2"},
+        {"id": "kamera5", "computingPower": 0, "parent": "router3"},
+        {"id": "kamera6", "computingPower": 0, "parent": "router3"},
+        {"id": "kamera7", "computingPower": 0, "parent": "router3"},
+        {"id": "kamera8", "computingPower": 0, "parent": "router4"},
+
+        {"id": "router1", "computingPower": 10, "children": ["kamera1","kamera2","kamera3"], "parent": "cloud", "neighbours": ["router2", "router3", "router4"]},
+        {"id": "router2", "computingPower": 20, "children": ["kamera4"], "parent": "cloud", "neighbours": ["router1", "router3", "router4"]},
+        {"id": "router3", "computingPower": 30, "children": ["kamera5","kamera6","kamera7"], "parent": "cloud", "neighbours": ["router1", "router2", "router4"]},
+        {"id": "router4", "computingPower": 40, "children": ["kamera8"], "parent": "cloud", "neighbours": ["router1", "router2", "router3"]},
+        {"id": "cloud", "computingPower": 1000, "children": ["router1","router2", "router3", "router4"]}
+    ]   
+}

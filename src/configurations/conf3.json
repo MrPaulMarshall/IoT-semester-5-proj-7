@@ -1,0 +1,17 @@
+{
+    "devices": [
+        {"id": "k1", "computingPower": 0, "parent": "r1"},
+        {"id": "k2", "computingPower": 0, "parent": "r1"},
+        {"id": "k3", "computingPower": 0, "parent": "r1"},
+        {"id": "k4", "computingPower": 0, "parent": "r1"},
+        {"id": "k5", "computingPower": 0, "parent": "r1"},
+        {"id": "k6", "computingPower": 0, "parent": "r1"},
+        {"id": "k7", "computingPower": 0, "parent": "r1"},
+        {"id": "k8", "computingPower": 0, "parent": "r1"},
+        {"id": "k9", "computingPower": 0, "parent": "r1"},
+        {"id": "k10", "computingPower": 0, "parent": "r1"},
+
+        {"id": "r1", "computingPower": 1, "children": ["k1","k2","k3","k4","k5","k6","k7","k8","k9","k10"], "parent": "cloud"},
+        {"id": "cloud", "computingPower": 1000, "children": ["r1"]}
+    ]   
+}

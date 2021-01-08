@@ -12,6 +12,11 @@ class Device:
     #   miasto -> cloud
 
     def __init__(self, deviceID, computingPower):
+        """Tworzy nowe urządzenie\n
+        Parametry: 
+        deviceID (string): Unikalne ID urządzenie\n
+        computingPower (int): Moc obliczeniowa urządzenia
+        """
         self.deviceID = deviceID
         self.maxComputingPower = computingPower
         self.currentComputingPower = computingPower
@@ -30,6 +35,10 @@ class Device:
         return "Id: " + str(self.deviceID)  # + " currentComputingPower: " + str(self.currentComputingPower)
 
     def compute(self):
+        """Wykonuje zadania przypisane do urządzenia\n
+        Po wykonaniu części zadania przesyła wynik do urządzenia od którego zadanie otrzymała\n
+        Po wykonaniu całości zadania wypisuje stosowny komunikat
+        """
         if len(self.tasksToCompute) != 0:
             for task in self.tasksToCompute:
                 task.compute(self.tasksToCompute[task])
@@ -45,12 +54,27 @@ class Device:
                     task.sourceDevice.receiveResults(result)
 
     def createTask(self, i):
+        """
+        Tworzy nowe losowe zadanie oraz przypisuje je do urządzenia\n
+        Parametry: 
+        i (int): Mówi o historii dzielenia zadania\n
+        Zwraca:
+        Task: Stworzone zadanie
+        """
         taskID = randint(1, int(1e8))
         computingUnits = randint(10, 200)
         maxTime = randint(1, 10000)
         return Task(taskID, computingUnits, maxTime, self, [i], None)
 
     def receiveResults(self, result):
+        """
+        Funkcja która przyjmuje rezultat wykonanego zadania \n
+        Jeśli zadanie zostało zwrócone do urządzenia w którym zostało utworzone wypisze się stosowny komunikat\n
+        Funcja łączy też zakończone podzadania\n
+        Parametry: 
+        result (result): Rezultat wykonanego zadania
+
+        """
         # gdy wynik wroci do kamery
         if len(result.task.divisionHistory) == 1:
             print("Task:", result.task, "returned to camera", self.deviceID)
@@ -68,10 +92,18 @@ class Device:
             parentTask.sourceDevice.receiveResults(Result(parentTask))
 
     def divideTask(self, task, chunkSizes):
+        """Dzieli zadanie na podzadania\n
+        Parametry: 
+        task (Task): zadanie do podzielenia\n
+        chunkSizes (List): Tablica liczb sumujących się do mocy potrzebnej na wykonanie całego zadania\n
+        Zwraca:
+        List: tablica podzielonych podzadań
+        """
         if len(chunkSizes) == 0:
             return None
         subtasks = []
         for idx, size in enumerate(chunkSizes):
+            
             subtask = Task(task.taskID, size, task.maxTime, self, task.divisionHistory, idx)
             subtasks.append(subtask)
         # zwraca liste subtaskow, ktore beda rozsylane do innych urzadzen
@@ -81,6 +113,10 @@ class Device:
         dev.sendTask(task)
 
     def sendTask(self, task):
+        """Funkcja dzieli i przydziela zadanie do urządzeń sąsiadujących. Gdy urządzenie jest w stanie samo wykonać zadanie nie przydziela go\n
+        Parametry: 
+        task (Task): Zadanie do wykonania
+        """
         # gdy sam moze obliczyc
         if self.currentComputingPower > task.computingUnits:
             self.receiveTask(task)
@@ -100,7 +136,6 @@ class Device:
                     break
             if unitsLeft > 0:  # gdy sasiedzi maja za mala moc, wysyla wyzej
                 chunks.append(unitsLeft)
-
             subtasks = self.divideTask(task, chunks)
 
             self.receiveTask(subtasks.pop(0))
@@ -117,6 +152,10 @@ class Device:
                 self.receiveResults(Result(sub))
 
     def receiveTask(self, task):
+        """Funkcja przypisuje zadanie do urządzenia.\n
+        Parametry: 
+        task (Task): Zadanie do wykonania
+        """
         # przydziela moc obliczeniowa dla taska TODO: ZMIENIC PRZYZNAWANIE
         if self.currentComputingPower > task.computingUnits:
             self.tasksToCompute[task] = task.computingUnits

@@ -1,0 +1,8 @@
+{
+    "devices": [
+        {"id": "k1", "computingPower": 0, "parent": "cloud"},
+        {"id": "k2", "computingPower": 0, "parent": "cloud"},
+
+        {"id": "cloud", "computingPower": 1000, "children": ["k1", "k2"]}
+    ]   
+}

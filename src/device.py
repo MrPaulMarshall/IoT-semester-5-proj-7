@@ -3,6 +3,7 @@ from time import sleep
 from task import Task
 from result import Result
 
+
 class Device:
     # jezeli device to kamera, to computingPower == 0, oraz connectedDevices == tasks == []
     # masterDevice:
@@ -26,7 +27,7 @@ class Device:
         self.tasksToJoin = {}
 
     def __repr__(self):
-        return "Id: " + str(self.deviceID) #+ " currentComputingPower: " + str(self.currentComputingPower)
+        return "Id: " + str(self.deviceID)  # + " currentComputingPower: " + str(self.currentComputingPower)
 
     def compute(self):
         if len(self.tasksToCompute) != 0:
@@ -34,7 +35,7 @@ class Device:
                 task.compute(self.tasksToCompute[task])
             finishedTasks = {k: v for k, v in self.tasksToCompute.items() if k.isCompleted()}
             for task in finishedTasks:
-                self.currentComputingPower += self.tasksToCompute[task]  # TODO: added line, need review
+                self.currentComputingPower += self.tasksToCompute[task]  # TODO: added line, OK?
                 del self.tasksToCompute[task]
 
                 if len(task.divisionHistory) == 0:
@@ -43,13 +44,18 @@ class Device:
                     result = Result(task)
                     task.sourceDevice.receiveResults(result)
 
-    def createTask(self):
+    def createTask(self, i):
         taskID = randint(1, int(1e8))
-        computingUnits = randint(1, 100)
+        computingUnits = randint(10, 200)
         maxTime = randint(1, 10000)
-        return Task(taskID, computingUnits, maxTime, self, [], None)
+        return Task(taskID, computingUnits, maxTime, self, [i], None)
 
     def receiveResults(self, result):
+        # gdy wynik wroci do kamery
+        if len(result.task.divisionHistory) == 1:
+            print("Task:", result.task, "returned to camera", self.deviceID)
+            return
+
         parentTask = None
         for task in self.tasksToJoin:
             if result.task.taskID == task.taskID and result.task.divisionHistory[1:] == task.divisionHistory:
@@ -57,8 +63,9 @@ class Device:
                 break
         self.tasksToJoin[parentTask].append(result.task)
         # jezeli wszystkie subtaski juz sa
-        if parentTask.computingUnits == sum(map(lambda t: t.computingUnits, self.tasksToJoin[parentTask])):
-            parentTask.sourceDevice.receiveResults(parentTask)
+        if parentTask.computingUnits <= sum(map(lambda t: t.initialUnits, self.tasksToJoin[parentTask])):
+            print(str(parentTask) + ": COLLECTING")
+            parentTask.sourceDevice.receiveResults(Result(parentTask))
 
     def divideTask(self, task, chunkSizes):
         if len(chunkSizes) == 0:
@@ -67,42 +74,52 @@ class Device:
         for idx, size in enumerate(chunkSizes):
             subtask = Task(task.taskID, size, task.maxTime, self, task.divisionHistory, idx)
             subtasks.append(subtask)
-        # zwraca liste subtaskow, ktore beda rozslane do innych urzadzen
+        # zwraca liste subtaskow, ktore beda rozsylane do innych urzadzen
         return subtasks
 
-    def sendTask(self, task, device):
-        device.receiveTask(task)
+    def sendFromCamera(self, task, dev):
+        dev.sendTask(task)
 
-    def receiveTask(self, task):
-        # gdy ma wystarczajaco mocy obliczeniowej na taska to wykonuje go sam
-        if self.currentComputingPower*0.8 >= task.computingUnits:
-            self.tasksToCompute[task] = task.computingUnits
-            self.currentComputingPower -= task.computingUnits
+    def sendTask(self, task):
+        # gdy sam moze obliczyc
+        if self.currentComputingPower > task.computingUnits:
+            self.receiveTask(task)
+            return
+        # rozdziela taski dalej
         else:
-            # max 60% zasobow kazdego urzadzenia
-            unitsLeft = task.computingUnits
-            chunks = [self.currentComputingPower*0.6]
-            unitsLeft -= chunks[0]
+            self.tasksToJoin[task] = []
 
-            for device in self.neighbourDevices:
-                tmp = min(unitsLeft, device.currentComputingPower*0.6)
+            unitsLeft = task.computingUnits
+            chunks = [self.currentComputingPower * 0.6]  # pierwszy subtask dla siebie samego
+            unitsLeft -= chunks[0]
+            for device in self.neighbourDevices:  # reszta subtaskow dla sasiadow
+                tmp = min(unitsLeft, device.currentComputingPower * 0.6)
                 chunks.append(tmp)
                 unitsLeft -= tmp
-
-            if unitsLeft > 0:
+                if unitsLeft <= 0:
+                    break
+            if unitsLeft > 0:  # gdy sasiedzi maja za mala moc, wysyla wyzej
                 chunks.append(unitsLeft)
 
             subtasks = self.divideTask(task, chunks)
-            self.tasksToJoin[task] = []  # TODO
 
-            self.receiveTask(subtasks.pop(0))  # pierwszy subtask dla siebie samego, reszte rozsyla innym
+            self.receiveTask(subtasks.pop(0))
+            for device in self.neighbourDevices:
+                device.receiveTask(subtasks.pop(0))
+                if not subtasks:
+                    break
+            if self.masterDevice is not None and subtasks:
+                self.masterDevice.sendTask(subtasks.pop(0))
+            if self.masterDevice is None and subtasks:
+                sub = subtasks.pop(0)
+                print('Task:', sub, "SENT TO CLOUD AND RETURNED")
+                # returnujemy w dol
+                self.receiveResults(Result(sub))
 
-            for device in self.neighbourDevices:  # reszta subtaskow, oprocz ostatniego, dla sasiadow
-                self.sendTask(subtasks.pop(0), device)
-
-            if len(subtasks) > 0:
-                self.sendTask(subtasks.pop(0), self.masterDevice)  # ostatni subtask (jesli istnieje) dla poziomu wyzej
-
-            if len(subtasks) > 0:
-                print("Liczba wygenerowanych subtaskow jest za duza!")
-
+    def receiveTask(self, task):
+        # przydziela moc obliczeniowa dla taska TODO: ZMIENIC PRZYZNAWANIE
+        if self.currentComputingPower > task.computingUnits:
+            self.tasksToCompute[task] = task.computingUnits
+            self.currentComputingPower -= task.computingUnits
+        else:
+            print('WONT HAPPEN')

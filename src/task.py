@@ -9,9 +9,12 @@ class Task:
     def __init__(self, taskID, computingUnits, maxTime, sourceDevice, divisionHistory, newIndex):
         self.taskID = taskID
         self.computingUnits = computingUnits
+
+        self.initialUnits = computingUnits
+
         self.maxTime = maxTime
         self.sourceDevice = sourceDevice
-        self.divisionHistory = divisionHistory
+        self.divisionHistory = divisionHistory.copy()
         if newIndex != None:
             self.divisionHistory.insert(0, newIndex)
 

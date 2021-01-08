@@ -34,10 +34,12 @@ for id in devices:
 
 cameras = [devices['0'], devices['1']]
 
+print("--------SIMULATION--------")
+
 # main simulation loop
-for i in range(1000):
+for i in range(100):
     for id in devices:
         devices[id].compute()
     if i % 10 == 0:
         for camera in cameras:
-            camera.sendTask(camera.createTask(), camera.masterDevice)
+            camera.sendFromCamera(camera.createTask(i), camera.masterDevice)

@@ -19,6 +19,9 @@
 #
 # nodeIdxDict - mapa identyfikatorow urzaden w indeksy wezlow
 # edgeIdxDict - mapa identyfikatorow krawedzi w ich indeksy
+#
+# devices - mapa identyfikatorow urzadzen w obiekty je posiadajace
+# (pole jest redundantne ale ulatwia dostep do danego urzadzenia)
 
 
 class Configuration:
@@ -29,6 +32,7 @@ class Configuration:
         self.connectionsSet = set()
         self.nodeIdxDict = dict()
         self.edgeIdxDict = dict()
+        self.devices = dict()
 
     def add_connection(self, idx1: int, idx2: int) -> bool:
         # Szudzik's function

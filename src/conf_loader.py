@@ -39,24 +39,24 @@ def load_cities_components(data, parent, devices):
     return citiesComponents
 
 
-def load_configuration(file: str, devices):
+def load_configuration(file: str):
     with open(file) as confFile:
         data = json.load(confFile)
         configuration = Configuration()
         cloudData = data['cloud']
         if cloudData is not None:
             newDevice = Device(cloudData['deviceID'], cloudData['computingPower'], None)
-            devices[cloudData['deviceID']] = newDevice
+            configuration.devices[cloudData['deviceID']] = newDevice
             cloud = Cloud(newDevice)
-            cloud.citiesComponents = load_cities_components(cloudData['citiesComponents'], newDevice, devices)
-            cloud.districtsComponents = load_districts_components(cloudData['districtsComponents'], newDevice, devices)
+            cloud.citiesComponents = load_cities_components(cloudData['citiesComponents'], newDevice, configuration.devices)
+            cloud.districtsComponents = load_districts_components(cloudData['districtsComponents'], newDevice, configuration.devices)
             configuration.cloud = cloud
 
         districtsData = data['districtsComponents']
         if districtsData is not None:
-            configuration.districtsComponents = load_districts_components(districtsData, None, devices)
+            configuration.districtsComponents = load_districts_components(districtsData, None, configuration.devices)
 
         citiesData = data['citiesComponents']
         if citiesData is not None:
-            configuration.citiesComponents = load_cities_components(citiesData, None, devices)
+            configuration.citiesComponents = load_cities_components(citiesData, None, configuration.devices)
         return configuration

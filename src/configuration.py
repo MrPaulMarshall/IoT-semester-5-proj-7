@@ -34,14 +34,14 @@ class Configuration:
         self.edgeIdxDict = dict()
         self.devices = dict()
 
-    def add_connection(self, idx1: int, idx2: int) -> bool:
+    def add_connection(self, idx1: int, idx2: int):
         # Szudzik's function
-        v = self.get_edge_id(idx1, idx2)
-        if v in self.connectionsSet:
+        edge_id = self.get_edge_id(idx1, idx2)
+        if edge_id in self.connectionsSet:
             return False
         else:
-            self.connectionsSet.add(v)
-            return True
+            self.connectionsSet.add(edge_id)
+            return edge_id
 
     def add_node_to_idx(self, deviceId: int, idx: int):
         self.nodeIdxDict[deviceId] = idx

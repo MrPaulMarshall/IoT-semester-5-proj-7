@@ -6,6 +6,19 @@ from districtNode import DistrictNode
 from configuration import Configuration
 
 
+def change_node_color(color: str, deviceId: int, canvas: tk.Canvas, configuration: Configuration):
+    idx = configuration.get_node_idx(deviceId)
+    canvas.itemconfig(idx, fill=color)
+
+
+def change_edge_color(color: str, deviceId1: int, deviceId2: int, canvas: tk.Canvas, configuration: Configuration):
+    idx1 = configuration.get_node_idx(deviceId1)
+    idx2 = configuration.get_node_idx(deviceId2)
+    edge_id = configuration.get_edge_id(idx1, idx2)
+    edge_idx = configuration.get_edge_idx(edge_id)
+    canvas.itemconfig(edge_idx, fill=color)
+
+
 def draw_wheel(x: float, y: float, radius: float, color: str, canvas: tk.Canvas) -> int:
     wheel = canvas.create_oval(x - radius, y - radius, x + radius, y + radius, fill=color)
     return wheel
@@ -68,6 +81,18 @@ def draw_connection(obj1: int, obj2: int, canvas: tk.Canvas):
     return line
 
 
+def connect_children(deviceId: int, componentIdx: int, children: [], canvas: tk.Canvas, configuration: Configuration):
+    deviceIdx = configuration.get_node_idx(deviceId)
+    edge_id = configuration.add_connection(deviceIdx, componentIdx)
+    if edge_id:
+        line = draw_connection(componentIdx, deviceIdx, canvas)
+        configuration.add_edge_to_idx(edge_id, line)
+        for child in children:
+            edge_id = configuration.add_connection(deviceIdx, configuration.get_node_idx(child.device.deviceID))
+            if edge_id:
+                configuration.add_edge_to_idx(edge_id, line)
+
+
 def draw_component(x: float, y: float, radius: float, color: str, canvas: tk.Canvas, nodes: [DistrictNode], configuration: Configuration):
     num_of_nodes = len(nodes)
     if num_of_nodes == 1:
@@ -81,34 +106,53 @@ def draw_component(x: float, y: float, radius: float, color: str, canvas: tk.Can
     circle = draw_circle(x, y, radius * 1.5, 'black', canvas)
     for node in nodes:
         for neighbour in node.device.neighbourDevices:
-            deviceID = node.device.deviceID
-            if configuration.add_connection(deviceID, neighbour.deviceID):
-                draw_connection(configuration.get_node_idx(deviceID), configuration.get_node_idx(neighbour.deviceID), canvas)
+            deviceIdx = configuration.get_node_idx(node.device.deviceID)
+            neighbourIdx = configuration.get_node_idx(neighbour.deviceID)
+            edge_id = configuration.add_connection(deviceIdx, neighbourIdx)
+            if edge_id:
+                line = draw_connection(deviceIdx, neighbourIdx, canvas)
+                configuration.add_edge_to_idx(edge_id, line)
     return circle
 
 
-def draw_cities_component(x: float, y:float, radius: float, canvas: tk.Canvas, city_nodes: [CityNode], configuration: Configuration):
+def draw_cities_component(x: float, y: float, radius: float, canvas: tk.Canvas, city_nodes: [CityNode], configuration: Configuration):
     num_of_nodes = 0
     for city_node in city_nodes:
         num_of_nodes += len(city_node.districtsComponents)
-    draw_component(x, y, radius, 'blue', canvas, city_nodes, configuration)
+    circle = draw_component(x, y, radius, 'blue', canvas, city_nodes, configuration)
 
     i = 0
     for city_node in city_nodes:
         for district_component in city_node.districtsComponents:
             gamma = i * (2 * math.pi / num_of_nodes)
             component = draw_component(x + radius * 3.2 * math.cos(gamma), y + radius * 3.2 * math.sin(gamma), radius, 'green', canvas, district_component, configuration)
-            draw_connection(component, configuration.get_node_idx(city_node.device.deviceID), canvas)
+            connect_children(city_node.device.deviceID, component, district_component, canvas, configuration)
             i += 1
+    return circle
 
 
 def draw_configuration(configuration: Configuration, canvas: tk.Canvas):
     is_cloud = True
     if configuration.cloud is None:
         is_cloud = False
-    num_of_cities_components = len(configuration.cloud.citiesComponents)
-    num_of_districts_components = len(configuration.cloud.districtsComponents)
-    print(num_of_cities_components)
-    print(num_of_districts_components)
-    draw_component(300, 300, 100, 'green', canvas, configuration.cloud.districtsComponents[0], configuration)
-    draw_cities_component(600, 600, 100, canvas, configuration.cloud.citiesComponents[0], configuration)
+    # num_of_cities_components = len(configuration.cloud.citiesComponents)
+    # num_of_districts_components = len(configuration.cloud.districtsComponents)
+    # print(num_of_cities_components)
+    # print(num_of_districts_components)
+    x = 500
+    y = 500
+    wheel = draw_wheel(x, y, 10, 'gold', canvas)
+    configuration.add_node_to_idx(configuration.cloud.device.deviceID, wheel)
+    i = 0
+    radius = 300
+    num_of_components = len(configuration.cloud.citiesComponents) + len(configuration.cloud.districtsComponents)
+    for cities_component in configuration.cloud.citiesComponents:
+        gamma = i * (2 * math.pi / num_of_components)
+        component = draw_cities_component(x + radius * 2 * math.cos(gamma), y + radius * 2 * math.sin(gamma), 100, canvas, cities_component, configuration)
+        connect_children(configuration.cloud.device.deviceID, component, cities_component, canvas, configuration)
+        i += 1
+    for districts_component in configuration.cloud.districtsComponents:
+        gamma = i * (2 * math.pi / num_of_components)
+        component = draw_component(x + radius * math.cos(gamma), y + radius * math.sin(gamma), 100, 'green', canvas, districts_component, configuration)
+        connect_children(configuration.cloud.device.deviceID, component, districts_component, canvas, configuration)
+        i += 1

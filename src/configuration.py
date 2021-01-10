@@ -50,10 +50,12 @@ class Configuration:
         self.edgeIdxDict[edgeId] = idx
 
     def get_node_idx(self, deviceId: int):
-        return self.nodeIdxDict[deviceId]
+        # return self.nodeIdxDict[deviceId]
+        return self.nodeIdxDict.get(deviceId)
 
     def get_edge_idx(self, edgeId: int):
-        return self.edgeIdxDict[edgeId]
+        # return self.edgeIdxDict[edgeId]
+        return self.edgeIdxDict.get(edgeId)
 
     def get_edge_id(self, idx1: int, idx2: int):
         if idx1 >= idx2:

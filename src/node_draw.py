@@ -1,9 +1,42 @@
 import tkinter as tk
 import math as math
-from device import Device
 from cityNode import CityNode
 from districtNode import DistrictNode
 from configuration import Configuration
+
+
+class Drafter:
+    root = None
+    canvas = None
+    configuration = None
+    __instance = None
+
+    @staticmethod
+    def get_instance(root, canvas, conf):
+        if Drafter.__instance is None:
+            Drafter(root, canvas, conf)
+        return Drafter.__instance
+
+    def __init__(self, root, canvas, conf):
+        Drafter.__instance = self
+        self.root = root
+        self.canvas = canvas
+        self.configuration = conf
+        # root = tk.Tk()
+        # root.title('Multi-agent communication in IOT')
+        # vbar = tk.Scrollbar(root, orient=tk.VERTICAL)
+        # vbar.pack(side=tk.RIGHT, fill=tk.Y)
+        # hbar = tk.Scrollbar(root, orient=tk.HORIZONTAL)
+        # hbar.pack(side=tk.BOTTOM, fill=tk.X)
+        # self.canvas = tk.Canvas(root, bg='lightgrey', width=1000, height=1000, yscrollcommand=vbar.set,
+        #                         xscrollcommand=hbar.set,
+        #                         confine=False, scrollregion=(-500, -500, 1000, 1000))
+        # self.canvas.pack(expand=tk.YES, fill=tk.BOTH)
+        # vbar.config(command=self.canvas.yview)
+        # hbar.config(command=self.canvas.xview)
+        # draw_configuration(self.configuration, self.canvas)
+        #
+        # root.mainloop()
 
 
 def change_node_color(color: str, deviceId: int, canvas: tk.Canvas, configuration: Configuration):
@@ -14,9 +47,11 @@ def change_node_color(color: str, deviceId: int, canvas: tk.Canvas, configuratio
 def change_edge_color(color: str, deviceId1: int, deviceId2: int, canvas: tk.Canvas, configuration: Configuration):
     idx1 = configuration.get_node_idx(deviceId1)
     idx2 = configuration.get_node_idx(deviceId2)
-    edge_id = configuration.get_edge_id(idx1, idx2)
-    edge_idx = configuration.get_edge_idx(edge_id)
-    canvas.itemconfig(edge_idx, fill=color)
+    if idx1 and idx2:
+        edge_id = configuration.get_edge_id(idx1, idx2)
+        edge_idx = configuration.get_edge_idx(edge_id)
+        if edge_idx:
+            canvas.itemconfig(edge_idx, fill=color)
 
 
 def draw_wheel(x: float, y: float, radius: float, color: str, canvas: tk.Canvas) -> int:
@@ -93,7 +128,8 @@ def connect_children(deviceId: int, componentIdx: int, children: [], canvas: tk.
                 configuration.add_edge_to_idx(edge_id, line)
 
 
-def draw_component(x: float, y: float, radius: float, color: str, canvas: tk.Canvas, nodes: [DistrictNode], configuration: Configuration):
+def draw_component(x: float, y: float, radius: float, color: str, canvas: tk.Canvas, nodes: [DistrictNode],
+                   configuration: Configuration):
     num_of_nodes = len(nodes)
     if num_of_nodes == 1:
         wheel = draw_wheel(x, y, 10, color, canvas)
@@ -115,7 +151,8 @@ def draw_component(x: float, y: float, radius: float, color: str, canvas: tk.Can
     return circle
 
 
-def draw_cities_component(x: float, y: float, radius: float, canvas: tk.Canvas, city_nodes: [CityNode], configuration: Configuration):
+def draw_cities_component(x: float, y: float, radius: float, canvas: tk.Canvas, city_nodes: [CityNode],
+                          configuration: Configuration):
     num_of_nodes = 0
     for city_node in city_nodes:
         num_of_nodes += len(city_node.districtsComponents)
@@ -125,7 +162,8 @@ def draw_cities_component(x: float, y: float, radius: float, canvas: tk.Canvas, 
     for city_node in city_nodes:
         for district_component in city_node.districtsComponents:
             gamma = i * (2 * math.pi / num_of_nodes)
-            component = draw_component(x + radius * 3.2 * math.cos(gamma), y + radius * 3.2 * math.sin(gamma), radius, 'green', canvas, district_component, configuration)
+            component = draw_component(x + radius * 3.2 * math.cos(gamma), y + radius * 3.2 * math.sin(gamma), radius,
+                                       'green', canvas, district_component, configuration)
             connect_children(city_node.device.deviceID, component, district_component, canvas, configuration)
             i += 1
     return circle
@@ -148,11 +186,13 @@ def draw_configuration(configuration: Configuration, canvas: tk.Canvas):
     num_of_components = len(configuration.cloud.citiesComponents) + len(configuration.cloud.districtsComponents)
     for cities_component in configuration.cloud.citiesComponents:
         gamma = i * (2 * math.pi / num_of_components)
-        component = draw_cities_component(x + radius * 2 * math.cos(gamma), y + radius * 2 * math.sin(gamma), 100, canvas, cities_component, configuration)
+        component = draw_cities_component(x + radius * 2 * math.cos(gamma), y + radius * 2 * math.sin(gamma), 100,
+                                          canvas, cities_component, configuration)
         connect_children(configuration.cloud.device.deviceID, component, cities_component, canvas, configuration)
         i += 1
     for districts_component in configuration.cloud.districtsComponents:
         gamma = i * (2 * math.pi / num_of_components)
-        component = draw_component(x + radius * math.cos(gamma), y + radius * math.sin(gamma), 100, 'green', canvas, districts_component, configuration)
+        component = draw_component(x + radius * math.cos(gamma), y + radius * math.sin(gamma), 100, 'green', canvas,
+                                   districts_component, configuration)
         connect_children(configuration.cloud.device.deviceID, component, districts_component, canvas, configuration)
         i += 1

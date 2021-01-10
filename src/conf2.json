@@ -1,7 +1,7 @@
 {
   "cloud": {
     "deviceID": 1,
-    "computingPower": 100,
+    "computingPower": 100000,
     "citiesComponents": [
       {"citiesNodes":  [
         {"deviceID": 11, "computingPower": 10, "neighbours": [12], "districtsComponents": [

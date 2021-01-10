@@ -1,7 +1,18 @@
+import colorsys as cs
 from random import randint
-from time import sleep
 from task import Task
-from result import Result
+
+from node_draw import Drafter
+from node_draw import change_node_color
+from node_draw import change_edge_color
+
+
+def calculateColor(val, min=0, max=120):
+    hue = ((val * (max - min)) + min)/360
+    c = cs.hsv_to_rgb(hue, 1, 1)
+    c = [int(el * 255) for el in c]
+    return '#%02x%02x%02x' % (c[0], c[1], c[2])
+
 
 
 class Device:
@@ -39,6 +50,8 @@ class Device:
         Po wykonaniu części zadania przesyła wynik do urządzenia od którego zadanie otrzymała\n
         Po wykonaniu całości zadania wypisuje stosowny komunikat
         """
+        drafter = Drafter.get_instance(None, None, None)
+
         if len(self.tasksToCompute) != 0:
             for task in self.tasksToCompute:
                 task.compute(self.tasksToCompute[task])
@@ -50,8 +63,14 @@ class Device:
                 if len(task.divisionHistory) == 0:
                     print(str(task) + ": FINISHED")
                 else:
-                    result = Result(task)
-                    task.sourceDevice.receiveResults(result)
+                    task.sourceDevice.receiveResults(task)
+                    #gdy task wraca zmien kolor na niebieski
+                    change_edge_color('blue', self.deviceID, task.sourceDevice.deviceID, drafter.canvas, drafter.configuration)
+
+        #zmien kolor node'a na aktualnie zajmowana moc obliczeniowa
+        change_node_color(calculateColor(self.currentComputingPower / self.maxComputingPower), self.deviceID, drafter.canvas, drafter.configuration)
+
+
 
     def createTask(self, i):
         """
@@ -62,8 +81,8 @@ class Device:
         Task: Stworzone zadanie
         """
         taskID = randint(1, int(1e8))
-        computingUnits = randint(10, 200)
-        maxTime = randint(1, 10000)
+        computingUnits = randint(50, 200)
+        maxTime = randint(1, 10)
         return Task(taskID, computingUnits, maxTime, self, [i], None)
 
     def receiveResults(self, result):
@@ -76,20 +95,26 @@ class Device:
 
         """
         # gdy wynik wroci do kamery
-        if len(result.task.divisionHistory) == 1:
-            print("Task:", result.task, "returned to camera", self.deviceID)
+        if len(result.divisionHistory) == 1:
+            print("Task:", result, "returned to camera", self.deviceID)
             return
 
         parentTask = None
         for task in self.tasksToJoin:
-            if result.task.taskID == task.taskID and result.task.divisionHistory[1:] == task.divisionHistory:
+            if result.taskID == task.taskID and result.divisionHistory[1:] == task.divisionHistory:
                 parentTask = task
                 break
-        self.tasksToJoin[parentTask].append(result.task)
+        self.tasksToJoin[parentTask].append(result)
         # jezeli wszystkie subtaski juz sa
         if parentTask.computingUnits <= sum(map(lambda t: t.initialUnits, self.tasksToJoin[parentTask])):
             print(str(parentTask) + ": COLLECTING")
-            parentTask.sourceDevice.receiveResults(Result(parentTask))
+
+            parentTask.sourceDevice.receiveResults(parentTask)
+            drafter = Drafter.get_instance(None, None, None)
+            change_edge_color('blue', self.deviceID, parentTask.sourceDevice.deviceID, drafter.canvas,
+                              drafter.configuration)
+
+
 
     def divideTask(self, task, chunkSizes):
         """Dzieli zadanie na podzadania\n
@@ -104,13 +129,16 @@ class Device:
         subtasks = []
         for idx, size in enumerate(chunkSizes):
             
-            subtask = Task(task.taskID, size, task.maxTime, self, task.divisionHistory, idx)
+            subtask = Task(task.taskID, size*task.maxTime, task.maxTime, self, task.divisionHistory, idx)
             subtasks.append(subtask)
         # zwraca liste subtaskow, ktore beda rozsylane do innych urzadzen
         return subtasks
 
     def sendFromCamera(self, task, dev):
         dev.sendTask(task)
+        drafter = Drafter.get_instance(None, None, None)
+        change_node_color('black', self.deviceID, drafter.canvas, drafter.configuration)
+        change_edge_color('red', self.deviceID, dev.deviceID, drafter.canvas, drafter.configuration)
 
     def sendTask(self, task):
         """Funkcja dzieli i przydziela zadanie do urządzeń sąsiadujących. Gdy urządzenie jest w stanie samo wykonać zadanie nie przydziela go\n
@@ -118,18 +146,18 @@ class Device:
         task (Task): Zadanie do wykonania
         """
         # gdy sam moze obliczyc
-        if self.currentComputingPower > task.computingUnits:
+        if self.currentComputingPower > task.computingUnits/task.maxTime:
             self.receiveTask(task)
             return
         # rozdziela taski dalej
         else:
             self.tasksToJoin[task] = []
 
-            unitsLeft = task.computingUnits
-            chunks = [self.currentComputingPower * 0.6]  # pierwszy subtask dla siebie samego
+            unitsLeft = task.computingUnits/task.maxTime
+            chunks = [self.currentComputingPower * 0.8]  # pierwszy subtask dla siebie samego
             unitsLeft -= chunks[0]
             for device in self.neighbourDevices:  # reszta subtaskow dla sasiadow
-                tmp = min(unitsLeft, device.currentComputingPower * 0.6)
+                tmp = min(unitsLeft, device.currentComputingPower * 0.8)
                 chunks.append(tmp)
                 unitsLeft -= tmp
                 if unitsLeft <= 0:
@@ -138,27 +166,32 @@ class Device:
                 chunks.append(unitsLeft)
             subtasks = self.divideTask(task, chunks)
 
+            drafter = Drafter.get_instance(None, None, None)
+
             self.receiveTask(subtasks.pop(0))
             for device in self.neighbourDevices:
                 device.receiveTask(subtasks.pop(0))
+                change_edge_color('red', self.deviceID, device.deviceID, drafter.canvas, drafter.configuration)
                 if not subtasks:
                     break
             if self.masterDevice is not None and subtasks:
+                change_node_color('white', self.deviceID, drafter.canvas, drafter.configuration) # TODO: otoczka gdy w gore
+                change_edge_color('red', self.deviceID, self.masterDevice.deviceID, drafter.canvas, drafter.configuration)
                 self.masterDevice.sendTask(subtasks.pop(0))
-            if self.masterDevice is None and subtasks:
+            if self.masterDevice is None and subtasks: # TODO: remove and make them on hold until there is some free space?
                 sub = subtasks.pop(0)
                 print('Task:', sub, "SENT TO CLOUD AND RETURNED")
                 # returnujemy w dol
-                self.receiveResults(Result(sub))
+                self.receiveResults(sub)
 
     def receiveTask(self, task):
         """Funkcja przypisuje zadanie do urządzenia.\n
         Parametry: 
         task (Task): Zadanie do wykonania
         """
-        # przydziela moc obliczeniowa dla taska TODO: ZMIENIC PRZYZNAWANIE
-        if self.currentComputingPower > task.computingUnits:
-            self.tasksToCompute[task] = task.computingUnits
-            self.currentComputingPower -= task.computingUnits
+        # przydziela moc obliczeniowa dla taska
+        if self.currentComputingPower > task.computingUnits/task.maxTime:
+            self.tasksToCompute[task] = task.computingUnits/task.maxTime
+            self.currentComputingPower -= task.computingUnits/task.maxTime
         else:
             print('WONT HAPPEN')

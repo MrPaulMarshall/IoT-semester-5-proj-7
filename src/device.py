@@ -51,7 +51,7 @@ class Device:
                 task.compute(self.tasksToCompute[task])
             finishedTasks = {k: v for k, v in self.tasksToCompute.items() if k.isCompleted()}
             for task in finishedTasks:
-                self.currentComputingPower += self.tasksToCompute[task]  # TODO: added line, OK?
+                self.currentComputingPower += self.tasksToCompute[task]
                 del self.tasksToCompute[task]
 
                 if len(task.divisionHistory) == 0:
@@ -169,12 +169,12 @@ class Device:
                 if not subtasks:
                     break
             if self.masterDevice is not None and subtasks:
-                change_node_on_push(self.deviceID, drafter.canvas, drafter.configuration) # TODO: otoczka gdy w gore
+                change_node_on_push(self.deviceID, drafter.canvas, drafter.configuration)
                 change_edge_on_push(self.deviceID, self.masterDevice.deviceID, drafter.canvas, drafter.configuration)
                 self.masterDevice.sendTask(subtasks.pop(0))
-            if self.masterDevice is None and subtasks: # TODO: remove and make them on hold until there is some free space?
+            if self.masterDevice is None and subtasks:
                 sub = subtasks.pop(0)
-                print('Task:', sub, "SENT TO CLOUD AND RETURNED")
+                print('Task:', sub, "CLOUD RUN OUT OF SPACE")
                 # returnujemy w dol
                 self.receiveResults(sub)
 

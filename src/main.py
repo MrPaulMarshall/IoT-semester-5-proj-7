@@ -32,9 +32,4 @@ def start_app():
 
     drafter.root.mainloop()
 
-
-
-
-
-
 start_app()

@@ -33,11 +33,23 @@ class Drafter:
         vbar.config(command=canvas.yview)
         hbar.config(command=canvas.xview)
         draw_configuration(conf, canvas)
+        plusButton = tk.Button(root, text='+', command=lambda: plusCallback(canvas))
+        # plusButton.pack(side=tk.RIGHT)
+        minusButton = tk.Button(root, text='-', command=lambda: minusCallback(canvas))
+        # minusButton.pack(side=tk.RIGHT)
         root.update()
 
         self.root = root
         self.canvas = canvas
         self.configuration = conf
+
+
+def plusCallback(canvas):
+    canvas.scale('all', 0, 0, 1.1, 1.1)
+
+
+def minusCallback(canvas):
+    canvas.scale('all', 0, 0, 0.9, 0.9)
 
 
 def calculateColor(val, min=0, max=120):
@@ -160,14 +172,14 @@ def connect_children(deviceId: int, componentIdx: int, children: [], canvas: tk.
 
 
 def draw_component(x: float, y: float, radius: float, color: str, canvas: tk.Canvas, nodes: [DistrictNode],
-                   configuration: Configuration):
+                   configuration: Configuration, rotation):
     num_of_nodes = len(nodes)
     if num_of_nodes == 1:
         wheel = draw_wheel(x, y, 10, color, canvas)
         configuration.add_node_to_idx(nodes[0].device.deviceID, wheel)
     else:
         for i in range(num_of_nodes):
-            gamma = i * (2 * math.pi / num_of_nodes)
+            gamma = i * (2 * math.pi / num_of_nodes) + rotation
             wheel = draw_wheel(x + radius * math.cos(gamma), y + radius * math.sin(gamma), 10, 'green', canvas)
             configuration.add_node_to_idx(nodes[i].device.deviceID, wheel)
     circle = draw_circle(x, y, radius * 1.5, color, canvas)
@@ -183,48 +195,44 @@ def draw_component(x: float, y: float, radius: float, color: str, canvas: tk.Can
 
 
 def draw_cities_component(x: float, y: float, radius: float, canvas: tk.Canvas, city_nodes: [CityNode],
-                          configuration: Configuration):
+                          configuration: Configuration, exclDirection):
     num_of_nodes = 0
     for city_node in city_nodes:
         num_of_nodes += len(city_node.districtsComponents)
-    circle = draw_component(x, y, radius, 'darkslateblue', canvas, city_nodes, configuration)
+    beta = math.pi / num_of_nodes
+    rotation = beta - (exclDirection - math.pi)
+    circle = draw_component(x, y, radius, 'darkslateblue', canvas, city_nodes, configuration, rotation)
 
     i = 0
     for city_node in city_nodes:
         for district_component in city_node.districtsComponents:
-            gamma = i * (2 * math.pi / num_of_nodes)
+            gamma = i * (2 * math.pi / num_of_nodes) + rotation
             component = draw_component(x + radius * 3.2 * math.cos(gamma), y + radius * 3.2 * math.sin(gamma), radius,
-                                       'lightblue', canvas, district_component, configuration)
+                                       'lightblue', canvas, district_component, configuration, 0)
             connect_children(city_node.device.deviceID, component, district_component, canvas, configuration)
             i += 1
     return circle
 
 
 def draw_configuration(configuration: Configuration, canvas: tk.Canvas):
-    is_cloud = True
-    if configuration.cloud is None:
-        is_cloud = False
-    # num_of_cities_components = len(configuration.cloud.citiesComponents)
-    # num_of_districts_components = len(configuration.cloud.districtsComponents)
-    # print(num_of_cities_components)
-    # print(num_of_districts_components)
     x = 500
     y = 500
     wheel = draw_wheel(x, y, 10, 'green', canvas)
     circle = draw_circle(x, y, 30, 'darkviolet', canvas)
     configuration.add_node_to_idx(configuration.cloud.device.deviceID, wheel)
     i = 0
-    radius = 300
+    radius = 80
+    component_radius = 3 * radius
     num_of_components = len(configuration.cloud.citiesComponents) + len(configuration.cloud.districtsComponents)
     for cities_component in configuration.cloud.citiesComponents:
         gamma = i * (2 * math.pi / num_of_components)
-        component = draw_cities_component(x + radius * 2 * math.cos(gamma), y + radius * 2 * math.sin(gamma), 100,
-                                          canvas, cities_component, configuration)
+        component = draw_cities_component(x + (component_radius + (i + 3) * radius) * math.cos(gamma), y + (component_radius + (i + 3) * radius) * math.sin(gamma), radius,
+                                          canvas, cities_component, configuration, 2 * math.pi - gamma)
         connect_children(configuration.cloud.device.deviceID, component, cities_component, canvas, configuration)
         i += 1
     for districts_component in configuration.cloud.districtsComponents:
         gamma = i * (2 * math.pi / num_of_components)
-        component = draw_component(x + radius * math.cos(gamma), y + radius * math.sin(gamma), 100, 'lightblue', canvas,
-                                   districts_component, configuration)
+        component = draw_component(x + component_radius * math.cos(gamma), y + component_radius * math.sin(gamma), radius, 'lightblue', canvas,
+                                   districts_component, configuration, 0)
         connect_children(configuration.cloud.device.deviceID, component, districts_component, canvas, configuration)
         i += 1

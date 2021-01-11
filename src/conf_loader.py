@@ -50,7 +50,7 @@ def load_configuration(file: str):
         configuration = Configuration()
         configuration.taskChance = data['taskChance']
         cloudData = data['cloud']
-        if cloudData is not None:
+        if cloudData is not None and len(cloudData) != 0:
             newDevice = Device(cloudData['deviceID'], cloudData['computingPower'], None)
             configuration.devices[cloudData['deviceID']] = newDevice
             cloud = Cloud(newDevice)
@@ -59,10 +59,10 @@ def load_configuration(file: str):
             configuration.cloud = cloud
 
         districtsData = data['districtsComponents']
-        if districtsData is not None:
+        if districtsData is not None and len(districtsData) != 0:
             configuration.districtsComponents = load_districts_components(districtsData, None, configuration.devices, configuration.cameras)
 
         citiesData = data['citiesComponents']
-        if citiesData is not None:
+        if citiesData is not None and len(citiesData) != 0:
             configuration.citiesComponents = load_cities_components(citiesData, None, configuration.devices, configuration.cameras)
         return configuration

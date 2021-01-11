@@ -22,21 +22,21 @@ class Drafter:
         Drafter.__instance = self
         root = tk.Tk()
         root.title('Multi-agent communication in IOT')
+        plusButton = tk.Button(root, text='+', command=lambda: plusCallback(canvas))
+        plusButton.pack(side=tk.RIGHT)
+        minusButton = tk.Button(root, text='-', command=lambda: minusCallback(canvas))
+        minusButton.pack(side=tk.RIGHT)
         vbar = tk.Scrollbar(root, orient=tk.VERTICAL)
         vbar.pack(side=tk.RIGHT, fill=tk.Y)
         hbar = tk.Scrollbar(root, orient=tk.HORIZONTAL)
         hbar.pack(side=tk.BOTTOM, fill=tk.X)
-        canvas = tk.Canvas(root, bg='white', width=1000, height=1000, yscrollcommand=vbar.set,
+        canvas = tk.Canvas(root, bg='white', width=3000, height=1000, yscrollcommand=vbar.set,
                                 xscrollcommand=hbar.set,
                                 confine=False, scrollregion=(-500, -500, 1000, 1000))
         canvas.pack(expand=tk.YES, fill=tk.BOTH)
         vbar.config(command=canvas.yview)
         hbar.config(command=canvas.xview)
         draw_configuration(conf, canvas)
-        plusButton = tk.Button(root, text='+', command=lambda: plusCallback(canvas))
-        plusButton.pack(side=tk.RIGHT)
-        minusButton = tk.Button(root, text='-', command=lambda: minusCallback(canvas))
-        minusButton.pack(side=tk.RIGHT)
         root.update()
 
         self.root = root
@@ -221,9 +221,7 @@ def draw_cities_component(x: float, y: float, radius: float, canvas: tk.Canvas, 
     return circle
 
 
-def draw_configuration(configuration: Configuration, canvas: tk.Canvas):
-    x = 500
-    y = 500
+def draw_cloud(x: int, y: int, configuration: Configuration, canvas: tk.Canvas):
     wheel = draw_wheel(x, y, 10, 'green', canvas)
     circle = draw_circle(x, y, 30, 'darkviolet', canvas)
     configuration.add_node_to_idx(configuration.cloud.device.deviceID, wheel)
@@ -243,3 +241,39 @@ def draw_configuration(configuration: Configuration, canvas: tk.Canvas):
                                    districts_component, configuration, 0)
         connect_children(configuration.cloud.device.deviceID, component, districts_component, canvas, configuration)
         i += 1
+
+
+def draw_cities_components(x: int, y: int, citiesComponents, configuration: Configuration, canvas: tk.Canvas):
+    radius = 80
+    component_radius = 3 * radius
+    num_of_components = len(citiesComponents)
+    for i, cities_component in enumerate(citiesComponents):
+        gamma = i * (2 * math.pi / num_of_components)
+        component = draw_cities_component(x + (component_radius + (i + 3) * radius) * math.cos(gamma), y + (component_radius + (i + 3) * radius) * math.sin(gamma), radius,
+                                          canvas, cities_component, configuration, 2 * math.pi - gamma)
+
+
+def draw_districts_components(x: int, y: int, districtsComponents, configuration: Configuration, canvas: tk.Canvas):
+    radius = 80
+    component_radius = 3 * radius
+    num_of_components = len(districtsComponents)
+    for i, districts_component in enumerate(districtsComponents):
+        gamma = i * (2 * math.pi / num_of_components)
+        component = draw_component(x + component_radius * math.cos(gamma), y + component_radius * math.sin(gamma), radius, 'lightblue', canvas,
+                                   districts_component, configuration, 0)
+
+
+def draw_configuration(configuration: Configuration, canvas: tk.Canvas):
+    x = 300
+    y = 500
+    transX = 0
+    transY = 0
+    if configuration.cloud is not None:
+        draw_cloud(x, y, configuration, canvas)
+        transX += 1000
+    if len(configuration.citiesComponents) != 0:
+        draw_cities_components(x + transX, y + transY, configuration.citiesComponents, configuration, canvas)
+        transX += 1000
+    if len(configuration.districtsComponents) != 0:
+        draw_districts_components(x + transX, y + transY, configuration.districtsComponents, configuration, canvas)
+

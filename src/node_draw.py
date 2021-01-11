@@ -34,9 +34,9 @@ class Drafter:
         hbar.config(command=canvas.xview)
         draw_configuration(conf, canvas)
         plusButton = tk.Button(root, text='+', command=lambda: plusCallback(canvas))
-        # plusButton.pack(side=tk.RIGHT)
+        plusButton.pack(side=tk.RIGHT)
         minusButton = tk.Button(root, text='-', command=lambda: minusCallback(canvas))
-        # minusButton.pack(side=tk.RIGHT)
+        minusButton.pack(side=tk.RIGHT)
         root.update()
 
         self.root = root
@@ -157,6 +157,13 @@ def draw_connection(obj1: int, obj2: int, canvas: tk.Canvas):
     y2 += (get_oval_radius(obj2, canvas) + 5) * math.sin(gamma) * sign
     line = canvas.create_line(x1, y1, x2, y2, width=2, fill='darkgrey')
     return line
+
+
+def reset_colors(canvas: tk.Canvas, configuration: Configuration):
+    for _, idx in configuration.nodeIdxDict.items():
+        canvas.itemconfig(idx, fill='green', outline='white')
+    for _, idx in configuration.edgeIdxDict.items():
+        canvas.itemconfig(idx, fill='darkgrey')
 
 
 def connect_children(deviceId: int, componentIdx: int, children: [], canvas: tk.Canvas, configuration: Configuration):

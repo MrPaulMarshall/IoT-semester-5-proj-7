@@ -1,0 +1,81 @@
+{
+  "taskChance": 0.2,
+  "cloud": {
+    "deviceID": 1,
+    "computingPower": 100000,
+    "citiesComponents": [
+      {"citiesNodes":  [
+        {"deviceID": 11, "computingPower": 10, "neighbours": [12,13], "districtsComponents": [
+          {"districtsNodes": [
+            {"deviceID": 17,"computingPower": 1, "neighbours":  [18, 20], "cameras": [{"deviceID": 123}]},
+            {"deviceID": 18,"computingPower": 1, "neighbours":  [17, 20], "cameras": [{"deviceID": 1234}]},
+            {"deviceID": 20,"computingPower": 1, "neighbours":  [17, 18], "cameras": [{"deviceID": 12345}]}
+          ]}
+        ]},
+        {"deviceID": 12,"computingPower": 10, "neighbours": [11,13], "districtsComponents": [
+          {"districtsNodes": [
+            {"deviceID": 27,"computingPower": 1, "neighbours":  [28,  30], "cameras": [{"deviceID": 645}]},
+            {"deviceID": 28,"computingPower": 1, "neighbours":  [27,  30], "cameras": [{"deviceID": 121345}]},
+            {"deviceID": 30,"computingPower": 1, "neighbours":  [27, 28], "cameras": [{"deviceID": 122345}]}
+          ]}
+        ]},
+        {"deviceID": 13,"computingPower": 10, "neighbours": [12,11], "districtsComponents": [
+          {"districtsNodes": [
+            {"deviceID": 37,"computingPower": 1, "neighbours":  [38,  40], "cameras": [{"deviceID": 123345}]},
+            {"deviceID": 38,"computingPower": 1, "neighbours":  [37,  40], "cameras": [{"deviceID": 124345}]},
+            {"deviceID": 40,"computingPower": 1, "neighbours":  [37, 38], "cameras": [{"deviceID": 123545}]}
+          ]}
+        ]}
+      ]},
+      {"citiesNodes":  [
+        {"deviceID": 111, "computingPower": 10, "neighbours": [112,113], "districtsComponents": [
+          {"districtsNodes": [
+            {"deviceID": 117,"computingPower": 1, "neighbours":  [118, 119], "cameras": [{"deviceID": 126345}]},
+            {"deviceID": 118,"computingPower": 1, "neighbours":  [117, 119], "cameras": [{"deviceID": 123745}]},
+            {"deviceID": 119,"computingPower": 1, "neighbours":  [117, 118], "cameras": [{"deviceID": 123845}]}
+          ]}
+        ]},
+        {"deviceID": 112,"computingPower": 110, "neighbours": [111,113], "districtsComponents": [
+          {"districtsNodes": [
+            {"deviceID": 127,"computingPower": 1, "neighbours":  [128,  130], "cameras": [{"deviceID": 129345}]},
+            {"deviceID": 128,"computingPower": 1, "neighbours":  [127,  130], "cameras": [{"deviceID": 1211345}]},
+            {"deviceID": 130,"computingPower": 1, "neighbours":  [127, 128], "cameras": [{"deviceID": 1231245}]}
+          ]}
+        ]},
+        {"deviceID": 113,"computingPower": 10, "neighbours": [112,111], "districtsComponents": [
+          {"districtsNodes": [
+            {"deviceID": 137,"computingPower": 1, "neighbours":  [138,  140], "cameras": [{"deviceID": 1231345}]},
+            {"deviceID": 138,"computingPower": 1, "neighbours":  [137,  140], "cameras": [{"deviceID": 1214345}]},
+            {"deviceID": 140,"computingPower": 1, "neighbours":  [137, 138], "cameras": [{"deviceID": 1231545}]}
+          ]}
+        ]}
+      ]},
+      {"citiesNodes":  [
+        {"deviceID": 311, "computingPower": 310, "neighbours": [312,313], "districtsComponents": [
+          {"districtsNodes": [
+            {"deviceID": 317,"computingPower": 1, "neighbours":  [318,  320], "cameras": [{"deviceID": 12345}]},
+            {"deviceID": 318,"computingPower": 1, "neighbours":  [317,  320], "cameras": [{"deviceID": 12345}]},
+            {"deviceID": 320,"computingPower": 1, "neighbours":  [317, 318], "cameras": [{"deviceID": 12345}]}
+          ]}
+        ]},
+        {"deviceID": 312,"computingPower": 10, "neighbours": [311,313], "districtsComponents": [
+          {"districtsNodes": [
+            {"deviceID": 327,"computingPower": 1, "neighbours":  [328,  330], "cameras": [{"deviceID": 12345}]},
+            {"deviceID": 328,"computingPower": 1, "neighbours":  [327,  330], "cameras": [{"deviceID": 12345}]},
+            {"deviceID": 330,"computingPower": 1, "neighbours":  [327, 328], "cameras": [{"deviceID": 12345}]}
+          ]}
+        ]},
+        {"deviceID": 313,"computingPower": 10, "neighbours": [312,311], "districtsComponents": [
+          {"districtsNodes": [
+            {"deviceID": 337,"computingPower": 1, "neighbours":  [338,  340], "cameras": [{"deviceID": 12345}]},
+            {"deviceID": 338,"computingPower": 1, "neighbours":  [337,  340], "cameras": [{"deviceID": 12345}]},
+            {"deviceID": 340,"computingPower": 1, "neighbours":  [337, 338], "cameras": [{"deviceID": 12345}]}
+          ]}
+        ]}
+      ]}
+    ],
+    "districtsComponents": []
+  },
+  "citiesComponents": [],
+  "districtsComponents": []
+}

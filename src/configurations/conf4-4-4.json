@@ -1,0 +1,148 @@
+{
+  "taskChance": 0.1,
+  "cloud": {
+    "deviceID": 1,
+    "computingPower": 100000,
+    "citiesComponents": [
+      {"citiesNodes":  [
+        {"deviceID": 11, "computingPower": 10, "neighbours": [12,13,14], "districtsComponents": [
+          {"districtsNodes": [
+            {"deviceID": 17,"computingPower": 1, "neighbours":  [18, 19, 20], "cameras": [{"deviceID": 123}]},
+            {"deviceID": 18,"computingPower": 1, "neighbours":  [17, 19, 20], "cameras": [{"deviceID": 1203}]},
+            {"deviceID": 19,"computingPower": 1, "neighbours":  [17, 18, 20], "cameras": [{"deviceID": 1213}]},
+            {"deviceID": 20,"computingPower": 1, "neighbours":  [17, 18, 19], "cameras": [{"deviceID": 1223}]}
+          ]}
+        ]},
+        {"deviceID": 12,"computingPower": 10, "neighbours": [11,13,14], "districtsComponents": [
+          {"districtsNodes": [
+            {"deviceID": 27,"computingPower": 1, "neighbours":  [28, 29, 30], "cameras": [{"deviceID": 1233}]},
+            {"deviceID": 28,"computingPower": 1, "neighbours":  [27, 29, 30], "cameras": [{"deviceID": 1243}]},
+            {"deviceID": 29,"computingPower": 1, "neighbours":  [27, 28, 30], "cameras": [{"deviceID": 1253}]},
+            {"deviceID": 30,"computingPower": 1, "neighbours":  [27, 28, 29], "cameras": [{"deviceID": 1263}]}
+          ]}
+        ]},
+        {"deviceID": 13,"computingPower": 10, "neighbours": [12,11,14], "districtsComponents": [
+          {"districtsNodes": [
+            {"deviceID": 37,"computingPower": 1, "neighbours":  [38, 39, 40], "cameras": [{"deviceID": 1273}]},
+            {"deviceID": 38,"computingPower": 1, "neighbours":  [37, 39, 40], "cameras": [{"deviceID": 1283}]},
+            {"deviceID": 39,"computingPower": 1, "neighbours":  [37, 38, 40], "cameras": [{"deviceID": 1293}]},
+            {"deviceID": 40,"computingPower": 1, "neighbours":  [37, 38, 39], "cameras": [{"deviceID": 1023}]}
+          ]}
+        ]},
+        {"deviceID": 14,"computingPower": 10, "neighbours": [12,13,11], "districtsComponents": [
+          {"districtsNodes": [
+            {"deviceID": 57,"computingPower": 1, "neighbours":  [58, 59, 60], "cameras": [{"deviceID": 12113}]},
+            {"deviceID": 58,"computingPower": 1, "neighbours":  [57, 59, 60], "cameras": [{"deviceID": 11223}]},
+            {"deviceID": 59,"computingPower": 1, "neighbours":  [57, 58, 60], "cameras": [{"deviceID": 12133}]},
+            {"deviceID": 60,"computingPower": 1, "neighbours":  [57, 58, 59], "cameras": [{"deviceID": 12143}]}
+          ]}
+        ]}
+      ]},
+      {"citiesNodes":  [
+        {"deviceID": 111, "computingPower": 10, "neighbours": [112,113,114], "districtsComponents": [
+          {"districtsNodes": [
+            {"deviceID": 117,"computingPower": 1, "neighbours":  [118, 119, 120], "cameras": [{"deviceID": 11523}]},
+            {"deviceID": 118,"computingPower": 1, "neighbours":  [117, 119, 120], "cameras": [{"deviceID": 11623}]},
+            {"deviceID": 119,"computingPower": 1, "neighbours":  [117, 118, 120], "cameras": [{"deviceID": 12173}]},
+            {"deviceID": 120,"computingPower": 1, "neighbours":  [117, 118, 119], "cameras": [{"deviceID": 12183}]}
+          ]}
+        ]},
+        {"deviceID": 112,"computingPower": 110, "neighbours": [111,113,114], "districtsComponents": [
+          {"districtsNodes": [
+            {"deviceID": 127,"computingPower": 1, "neighbours":  [128, 129, 130], "cameras": [{"deviceID": 12193}]},
+            {"deviceID": 128,"computingPower": 1, "neighbours":  [127, 129, 130], "cameras": [{"deviceID": 12203}]},
+            {"deviceID": 129,"computingPower": 1, "neighbours":  [127, 128, 130], "cameras": [{"deviceID": 12213}]},
+            {"deviceID": 130,"computingPower": 1, "neighbours":  [127, 128, 129], "cameras": [{"deviceID": 12223}]}
+          ]}
+        ]},
+        {"deviceID": 113,"computingPower": 10, "neighbours": [112,111,114], "districtsComponents": [
+          {"districtsNodes": [
+            {"deviceID": 137,"computingPower": 1, "neighbours":  [138, 139, 140], "cameras": [{"deviceID": 12233}]},
+            {"deviceID": 138,"computingPower": 1, "neighbours":  [137, 139, 140], "cameras": [{"deviceID": 12243}]},
+            {"deviceID": 139,"computingPower": 1, "neighbours":  [137, 138, 140], "cameras": [{"deviceID": 12253}]},
+            {"deviceID": 140,"computingPower": 1, "neighbours":  [137, 138, 139], "cameras": [{"deviceID": 12263}]}
+          ]}
+        ]},
+        {"deviceID": 114,"computingPower": 110, "neighbours": [112,113,111], "districtsComponents": [
+          {"districtsNodes": [
+            {"deviceID": 157,"computingPower": 1, "neighbours":  [158, 159, 160], "cameras": [{"deviceID": 12273}]},
+            {"deviceID": 158,"computingPower": 1, "neighbours":  [157, 159, 160], "cameras": [{"deviceID": 12313}]},
+            {"deviceID": 159,"computingPower": 1, "neighbours":  [157, 158, 160], "cameras": [{"deviceID": 12323}]},
+            {"deviceID": 160,"computingPower": 1, "neighbours":  [157, 158, 159], "cameras": [{"deviceID": 12333}]}
+          ]}
+        ]}
+      ]},
+      {"citiesNodes":  [
+        {"deviceID": 311, "computingPower": 310, "neighbours": [312,313,314], "districtsComponents": [
+          {"districtsNodes": [
+            {"deviceID": 317,"computingPower": 1, "neighbours":  [318, 319, 320], "cameras": [{"deviceID": 12343}]},
+            {"deviceID": 318,"computingPower": 1, "neighbours":  [317, 319, 320], "cameras": [{"deviceID": 12353}]},
+            {"deviceID": 319,"computingPower": 1, "neighbours":  [317, 318, 320], "cameras": [{"deviceID": 12363}]},
+            {"deviceID": 320,"computingPower": 1, "neighbours":  [317, 318, 319], "cameras": [{"deviceID": 12373}]}
+          ]}
+        ]},
+        {"deviceID": 312,"computingPower": 10, "neighbours": [311,313,314], "districtsComponents": [
+          {"districtsNodes": [
+            {"deviceID": 327,"computingPower": 1, "neighbours":  [328, 329, 330], "cameras": [{"deviceID": 14123}]},
+            {"deviceID": 328,"computingPower": 1, "neighbours":  [327, 329, 330], "cameras": [{"deviceID": 12423}]},
+            {"deviceID": 329,"computingPower": 1, "neighbours":  [327, 328, 330], "cameras": [{"deviceID": 12433}]},
+            {"deviceID": 330,"computingPower": 1, "neighbours":  [327, 328, 329], "cameras": [{"deviceID": 12443}]}
+          ]}
+        ]},
+        {"deviceID": 313,"computingPower": 10, "neighbours": [312,311,314], "districtsComponents": [
+          {"districtsNodes": [
+            {"deviceID": 337,"computingPower": 1, "neighbours":  [338, 339, 340], "cameras": [{"deviceID": 14523}]},
+            {"deviceID": 338,"computingPower": 1, "neighbours":  [337, 339, 340], "cameras": [{"deviceID": 14623}]},
+            {"deviceID": 339,"computingPower": 1, "neighbours":  [337, 338, 340], "cameras": [{"deviceID": 12473}]},
+            {"deviceID": 340,"computingPower": 1, "neighbours":  [337, 338, 339], "cameras": [{"deviceID": 12483}]}
+          ]}
+        ]},
+        {"deviceID": 314,"computingPower": 10, "neighbours": [312,313,311], "districtsComponents": [
+          {"districtsNodes": [
+            {"deviceID": 357,"computingPower": 1, "neighbours":  [358, 359, 360], "cameras": [{"deviceID": 15123}]},
+            {"deviceID": 358,"computingPower": 1, "neighbours":  [357, 359, 360], "cameras": [{"deviceID": 12523}]},
+            {"deviceID": 359,"computingPower": 1, "neighbours":  [357, 358, 360], "cameras": [{"deviceID": 12533}]},
+            {"deviceID": 360,"computingPower": 1, "neighbours":  [357, 358, 359], "cameras": [{"deviceID": 12543}]}
+          ]}
+        ]}
+      ]},
+      {"citiesNodes":  [
+        {"deviceID": 411, "computingPower": 10, "neighbours": [412,413,414], "districtsComponents": [
+          {"districtsNodes": [
+            {"deviceID": 417,"computingPower": 1, "neighbours":  [418, 419, 420], "cameras": [{"deviceID": 15523}]},
+            {"deviceID": 418,"computingPower": 1, "neighbours":  [417, 419, 420], "cameras": [{"deviceID": 12563}]},
+            {"deviceID": 419,"computingPower": 1, "neighbours":  [417, 418, 420], "cameras": [{"deviceID": 12573}]},
+            {"deviceID": 420,"computingPower": 1, "neighbours":  [417, 418, 419], "cameras": [{"deviceID": 12583}]}
+          ]}
+        ]},
+        {"deviceID": 412,"computingPower": 10, "neighbours": [411,413,414], "districtsComponents": [
+          {"districtsNodes": [
+            {"deviceID": 427,"computingPower": 1, "neighbours":  [428, 429, 430], "cameras": [{"deviceID": 12593}]},
+            {"deviceID": 428,"computingPower": 1, "neighbours":  [427, 429, 430], "cameras": [{"deviceID": 12613}]},
+            {"deviceID": 429,"computingPower": 1, "neighbours":  [427, 428, 430], "cameras": [{"deviceID": 12623}]},
+            {"deviceID": 430,"computingPower": 1, "neighbours":  [427, 428, 429], "cameras": [{"deviceID": 12633}]}
+          ]}
+        ]},
+        {"deviceID": 413,"computingPower": 10, "neighbours": [412,411,414], "districtsComponents": [
+          {"districtsNodes": [
+            {"deviceID": 437,"computingPower": 1, "neighbours":  [438, 439, 440], "cameras": [{"deviceID": 12643}]},
+            {"deviceID": 438,"computingPower": 1, "neighbours":  [437, 439, 440], "cameras": [{"deviceID": 16523}]},
+            {"deviceID": 439,"computingPower": 1, "neighbours":  [437, 438, 440], "cameras": [{"deviceID": 17723}]},
+            {"deviceID": 440,"computingPower": 1, "neighbours":  [437, 438, 439], "cameras": [{"deviceID": 12853}]}
+          ]}
+        ]},
+        {"deviceID": 414,"computingPower": 10, "neighbours": [412,413,411], "districtsComponents": [
+          {"districtsNodes": [
+            {"deviceID": 457,"computingPower": 1, "neighbours":  [458, 459, 460], "cameras": [{"deviceID": 19023}]},
+            {"deviceID": 458,"computingPower": 1, "neighbours":  [457, 459, 460], "cameras": [{"deviceID": 12913}]},
+            {"deviceID": 459,"computingPower": 1, "neighbours":  [457, 458, 460], "cameras": [{"deviceID": 19223}]},
+            {"deviceID": 460,"computingPower": 1, "neighbours":  [457, 458, 459], "cameras": [{"deviceID": 19323}]}
+          ]}
+        ]}
+      ]}
+    ],
+    "districtsComponents": []
+  },
+  "citiesComponents": [],
+  "districtsComponents": []
+}

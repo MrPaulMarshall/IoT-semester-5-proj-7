@@ -1,0 +1,121 @@
+{
+  "taskChance": 0.7,
+  "cloud": {
+    "deviceID": 1,
+    "computingPower": 100000,
+    "citiesComponents": [
+      {"citiesNodes":  [
+        {"deviceID": 11, "computingPower": 10, "neighbours": [12], "districtsComponents": [
+          {"districtsNodes": [
+            {"deviceID": 18,"computingPower": 1, "neighbours":  [19, 20], "cameras": [
+              {"deviceID":  180}, {"deviceID": 181}
+            ]},
+            {"deviceID": 19,"computingPower": 1, "neighbours":  [18, 20], "cameras": [
+              {"deviceID":  190}, {"deviceID": 191}
+            ]},
+            {"deviceID": 20,"computingPower": 1, "neighbours":  [18, 19], "cameras": [
+              {"deviceID":  200}, {"deviceID": 201}
+            ]}
+          ]}
+        ]},
+        {"deviceID": 12,"computingPower": 10, "neighbours": [11, 13], "districtsComponents": [
+          {"districtsNodes": [
+            {"deviceID": 14,"computingPower": 1, "neighbours":  [16], "cameras": [
+              {"deviceID":  2001}, {"deviceID": 2011}
+            ]},
+            {"deviceID": 15,"computingPower": 1, "neighbours":  [17], "cameras": [
+              {"deviceID":  2200}, {"deviceID": 2012}
+            ]},
+            {"deviceID": 16,"computingPower": 1, "neighbours":  [14, 17], "cameras": [
+              {"deviceID":  2030}, {"deviceID": 2031}
+            ]},
+            {"deviceID": 17,"computingPower": 1, "neighbours":  [15, 16], "cameras": [
+              {"deviceID":  2040}, {"deviceID": 2014}
+            ]}
+          ]}
+        ]},
+        {"deviceID": 13,"computingPower": 10, "neighbours": [12], "districtsComponents": [
+          {"districtsNodes": [
+            {"deviceID": 21,"computingPower": 1, "neighbours":  [22], "cameras": [
+              {"deviceID":  2050}, {"deviceID": 2051}
+            ]},
+            {"deviceID": 22,"computingPower": 1, "neighbours":  [21], "cameras": [
+              {"deviceID":  2600}, {"deviceID": 2601}
+            ]}
+          ]}
+        ]}
+      ]},
+      {"citiesNodes":  [
+        {"deviceID": 23,"computingPower": 10, "neighbours": [24], "districtsComponents": [
+          {"districtsNodes": [
+            {"deviceID": 25,"computingPower": 1, "neighbours":  [28], "cameras": [
+              {"deviceID":  20501}, {"deviceID": 20512}
+            ]},
+            {"deviceID": 26,"computingPower": 1, "neighbours":  [27, 29], "cameras": [
+              {"deviceID":  20350}, {"deviceID": 20541}
+            ]},
+            {"deviceID": 27,"computingPower": 1, "neighbours":  [26, 30], "cameras": [
+              {"deviceID":  26050}, {"deviceID": 20551}
+            ]},
+            {"deviceID": 28,"computingPower": 1, "neighbours":  [25, 29], "cameras": [
+              {"deviceID":  20750}, {"deviceID": 28051}
+            ]},
+            {"deviceID": 29,"computingPower": 1, "neighbours":  [26, 28, 30], "cameras": [
+              {"deviceID":  20050}, {"deviceID": 20591}
+            ]},
+            {"deviceID": 30,"computingPower": 1, "neighbours":  [27, 29], "cameras": [
+              {"deviceID":  201250}, {"deviceID": 205131}
+            ]}
+          ]}
+        ]},
+        {"deviceID": 24,"computingPower": 10, "neighbours": [23], "districtsComponents": [
+          {"districtsNodes": [
+            {"deviceID": 32,"computingPower": 1, "neighbours":  [31, 33, 34], "cameras": [
+              {"deviceID":  2012150}, {"deviceID": 2052131}
+            ]},
+            {"deviceID": 33,"computingPower": 1, "neighbours":  [31, 32, 34], "cameras": [
+              {"deviceID":  2014250}, {"deviceID": 2053131}
+            ]},
+            {"deviceID": 31,"computingPower": 1, "neighbours":  [32, 33, 34], "cameras": [
+              {"deviceID":  2051250}, {"deviceID": 2051631}
+            ]},
+            {"deviceID": 34,"computingPower": 1, "neighbours":  [31, 32, 33], "cameras": [
+              {"deviceID":  2081250}, {"deviceID": 2075131}
+            ]}
+          ]},
+          {"districtsNodes": [
+            {"deviceID": 35,"computingPower": 1, "neighbours":  [36], "cameras": [
+              {"deviceID":  208120}, {"deviceID": 207131}
+            ]},
+            {"deviceID": 36,"computingPower": 1, "neighbours":  [35, 37], "cameras": [
+              {"deviceID":  208250}, {"deviceID": 205131}
+            ]},
+            {"deviceID": 37,"computingPower": 1, "neighbours":  [36, 38], "cameras": [
+              {"deviceID":  201250}, {"deviceID": 207131}
+            ]},
+            {"deviceID": 38,"computingPower": 1, "neighbours":  [37], "cameras": [
+              {"deviceID":  281250}, {"deviceID": 207531}
+            ]}
+          ]}
+        ]}
+      ]}
+    ],
+    "districtsComponents": [
+      {"districtsNodes": [
+        {"deviceID": 2, "computingPower": 1, "neighbours": [3]},
+        {"deviceID": 3, "computingPower": 1, "neighbours": [2, 4, 5]},
+        {"deviceID": 4, "computingPower": 1, "neighbours": [3, 6]},
+        {"deviceID": 5, "computingPower": 1, "neighbours": [3, 6]},
+        {"deviceID": 6, "computingPower": 1, "neighbours": [4, 5]}
+      ]},
+      {"districtsNodes": [
+        {"deviceID": 7, "computingPower": 1, "neighbours": [10]},
+        {"deviceID": 8, "computingPower": 1, "neighbours": [10]},
+        {"deviceID": 9, "computingPower": 1, "neighbours": [10]},
+        {"deviceID": 10,"computingPower": 1, "neighbours": [7, 8, 9]}
+      ]}
+    ]
+  },
+  "citiesComponents": [],
+  "districtsComponents": []
+}

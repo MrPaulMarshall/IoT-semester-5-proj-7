@@ -1,0 +1,19 @@
+{
+    "taskChance": 1,
+    "cloud": {
+      "deviceID": 1,
+      "computingPower": 100000,
+      "citiesComponents": [
+        {"citiesNodes":  [
+          {"deviceID": 2,"computingPower": 10, "neighbours": [], "districtsComponents": [
+            {"districtsNodes": [
+              {"deviceID": 4,"computingPower": 1, "neighbours":  [], "cameras": [{"deviceID": 20713}]}
+            ]}
+          ]}
+        ]}
+      ],
+      "districtsComponents": []
+    },
+    "citiesComponents": [],
+    "districtsComponents": []
+  }

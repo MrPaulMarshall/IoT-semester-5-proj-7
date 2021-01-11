@@ -1,19 +1,14 @@
-import tkinter as tk
-import threading as th
 import time
 
 import random
 from conf_loader import load_configuration
-from configuration import Configuration
-from node_draw import draw_configuration
 from node_draw import Drafter
 from node_draw import reset_colors
-
 
 def start_app():
     configuration = load_configuration("configurations/conf4-4-4.json")
     for _, device in configuration.devices.items():
-        print(device,  " parent: [", device.masterDevice , "] children = " , device.childrenDevices, " neighbours: ", device.neighbourDevices)
+        print(device,  " parent: [", device.masterDevice ," neighbours: ", device.neighbourDevices)
 
     drafter = Drafter.get_instance(configuration)
 
@@ -34,7 +29,7 @@ def start_app():
         for camera in cameras:
             if random.random() <= configuration.taskChance:
                 camera.sendFromCamera(camera.createTask(i), camera.masterDevice)
-        time.sleep(1)
+        time.sleep(0.5)
         drafter.root.update()
 
     drafter.root.mainloop()

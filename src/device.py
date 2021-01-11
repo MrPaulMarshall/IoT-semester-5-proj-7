@@ -7,6 +7,7 @@ from node_draw import change_edge_on_push
 from node_draw import change_edge_on_pull
 from node_draw import change_node_on_push
 from node_draw import calculateColor
+from node_draw import change_node_on_pull
 
 
 class Device:
@@ -27,12 +28,9 @@ class Device:
         self.currentComputingPower = computingPower
         self.masterDevice = masterDevice
         self.neighbourDevices = []
-        self.childrenDevices = []
 
         # slownik {task: przyznanaMocObliczeniowa}
         self.tasksToCompute = {}
-        # lista taskow do wyslania gdzie indziej
-        self.tasksToSend = []
         # slownik {task: [subtask1, subtask2 ..]}, sluzy do zbierania wynikow z rozeslanych taskow
         self.tasksToJoin = {}
 
@@ -60,6 +58,8 @@ class Device:
                     task.sourceDevice.receiveResults(task)
                     #gdy task wraca zmien kolor na niebieski
                     change_edge_on_pull(self.deviceID, task.sourceDevice.deviceID, drafter.canvas, drafter.configuration)
+                    if task.sourceDevice.masterDevice.deviceID is self.deviceID:
+                        change_node_on_pull(task.sourceDevice.deviceID, drafter.canvas, drafter.configuration)
 
         #zmien kolor node'a na aktualnie zajmowana moc obliczeniowa
         change_node_color(calculateColor(self.currentComputingPower / self.maxComputingPower), self.deviceID, drafter.canvas, drafter.configuration)
@@ -107,6 +107,8 @@ class Device:
             drafter = Drafter.get_instance(None)
             change_edge_on_pull(self.deviceID, parentTask.sourceDevice.deviceID, drafter.canvas,
                               drafter.configuration)
+            if parentTask.sourceDevice.masterDevice.deviceID is self.deviceID:
+                change_node_on_pull(parentTask.sourceDevice.deviceID, drafter.canvas, drafter.configuration)
 
 
 
@@ -148,10 +150,10 @@ class Device:
             self.tasksToJoin[task] = []
 
             unitsLeft = task.computingUnits/task.maxTime
-            chunks = [self.currentComputingPower * 0.8]  # pierwszy subtask dla siebie samego
+            chunks = [self.currentComputingPower * 0.5]  # pierwszy subtask dla siebie samego
             unitsLeft -= chunks[0]
             for device in self.neighbourDevices:  # reszta subtaskow dla sasiadow
-                tmp = min(unitsLeft, device.currentComputingPower * 0.8)
+                tmp = min(unitsLeft, device.currentComputingPower * 0.5)
                 chunks.append(tmp)
                 unitsLeft -= tmp
                 if unitsLeft <= 0:
@@ -174,7 +176,7 @@ class Device:
                 self.masterDevice.sendTask(subtasks.pop(0))
             if self.masterDevice is None and subtasks:
                 sub = subtasks.pop(0)
-                print('Task:', sub, "CLOUD RUN OUT OF SPACE")
+                print('Task:', sub, " - CLOUD RAN OUT OF SPACE")
                 # returnujemy w dol
                 self.receiveResults(sub)
 
@@ -187,5 +189,3 @@ class Device:
         if self.currentComputingPower > task.computingUnits/task.maxTime:
             self.tasksToCompute[task] = task.computingUnits/task.maxTime
             self.currentComputingPower -= task.computingUnits/task.maxTime
-        else:
-            print('WONT HAPPEN')

@@ -15,7 +15,7 @@ def start_app():
 
     drafter = Drafter.get_instance(configuration)
 
-    cameras = [configuration.devices[25], configuration.devices[26]]
+    cameras = configuration.cameras
 
     print("--------SIMULATION--------")
 

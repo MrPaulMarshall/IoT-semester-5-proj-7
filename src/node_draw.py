@@ -211,7 +211,7 @@ def draw_configuration(configuration: Configuration, canvas: tk.Canvas):
     x = 500
     y = 500
     wheel = draw_wheel(x, y, 10, 'green', canvas)
-    circle = draw_circle(x, y, 20, 'mediumblue', canvas)
+    circle = draw_circle(x, y, 30, 'darkviolet', canvas)
     configuration.add_node_to_idx(configuration.cloud.device.deviceID, wheel)
     i = 0
     radius = 300

@@ -33,6 +33,8 @@ class Configuration:
         self.nodeIdxDict = dict()
         self.edgeIdxDict = dict()
         self.devices = dict()
+        self.cameras = set()
+        self.taskChance = 1
 
     def add_connection(self, idx1: int, idx2: int):
         # Szudzik's function

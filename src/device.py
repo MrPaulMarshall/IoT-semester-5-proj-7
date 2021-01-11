@@ -1,18 +1,12 @@
-import colorsys as cs
 from random import randint
 from task import Task
 
 from node_draw import Drafter
 from node_draw import change_node_color
-from node_draw import change_edge_color
-
-
-def calculateColor(val, min=0, max=120):
-    hue = ((val * (max - min)) + min)/360
-    c = cs.hsv_to_rgb(hue, 1, 1)
-    c = [int(el * 255) for el in c]
-    return '#%02x%02x%02x' % (c[0], c[1], c[2])
-
+from node_draw import change_edge_on_push
+from node_draw import change_edge_on_pull
+from node_draw import change_node_on_push
+from node_draw import calculateColor
 
 
 class Device:
@@ -50,7 +44,7 @@ class Device:
         Po wykonaniu części zadania przesyła wynik do urządzenia od którego zadanie otrzymała\n
         Po wykonaniu całości zadania wypisuje stosowny komunikat
         """
-        drafter = Drafter.get_instance(None, None, None)
+        drafter = Drafter.get_instance(None)
 
         if len(self.tasksToCompute) != 0:
             for task in self.tasksToCompute:
@@ -65,7 +59,7 @@ class Device:
                 else:
                     task.sourceDevice.receiveResults(task)
                     #gdy task wraca zmien kolor na niebieski
-                    change_edge_color('blue', self.deviceID, task.sourceDevice.deviceID, drafter.canvas, drafter.configuration)
+                    change_edge_on_pull(self.deviceID, task.sourceDevice.deviceID, drafter.canvas, drafter.configuration)
 
         #zmien kolor node'a na aktualnie zajmowana moc obliczeniowa
         change_node_color(calculateColor(self.currentComputingPower / self.maxComputingPower), self.deviceID, drafter.canvas, drafter.configuration)
@@ -110,8 +104,8 @@ class Device:
             print(str(parentTask) + ": COLLECTING")
 
             parentTask.sourceDevice.receiveResults(parentTask)
-            drafter = Drafter.get_instance(None, None, None)
-            change_edge_color('blue', self.deviceID, parentTask.sourceDevice.deviceID, drafter.canvas,
+            drafter = Drafter.get_instance(None)
+            change_edge_on_pull(self.deviceID, parentTask.sourceDevice.deviceID, drafter.canvas,
                               drafter.configuration)
 
 
@@ -136,9 +130,9 @@ class Device:
 
     def sendFromCamera(self, task, dev):
         dev.sendTask(task)
-        drafter = Drafter.get_instance(None, None, None)
-        change_node_color('black', self.deviceID, drafter.canvas, drafter.configuration)
-        change_edge_color('red', self.deviceID, dev.deviceID, drafter.canvas, drafter.configuration)
+        drafter = Drafter.get_instance(None)
+        change_node_on_push(self.deviceID, drafter.canvas, drafter.configuration)
+        change_edge_on_push(self.deviceID, dev.deviceID, drafter.canvas, drafter.configuration)
 
     def sendTask(self, task):
         """Funkcja dzieli i przydziela zadanie do urządzeń sąsiadujących. Gdy urządzenie jest w stanie samo wykonać zadanie nie przydziela go\n
@@ -166,17 +160,17 @@ class Device:
                 chunks.append(unitsLeft)
             subtasks = self.divideTask(task, chunks)
 
-            drafter = Drafter.get_instance(None, None, None)
+            drafter = Drafter.get_instance(None)
 
             self.receiveTask(subtasks.pop(0))
             for device in self.neighbourDevices:
                 device.receiveTask(subtasks.pop(0))
-                change_edge_color('red', self.deviceID, device.deviceID, drafter.canvas, drafter.configuration)
+                change_edge_on_push(self.deviceID, device.deviceID, drafter.canvas, drafter.configuration)
                 if not subtasks:
                     break
             if self.masterDevice is not None and subtasks:
-                change_node_color('white', self.deviceID, drafter.canvas, drafter.configuration) # TODO: otoczka gdy w gore
-                change_edge_color('red', self.deviceID, self.masterDevice.deviceID, drafter.canvas, drafter.configuration)
+                change_node_on_push(self.deviceID, drafter.canvas, drafter.configuration) # TODO: otoczka gdy w gore
+                change_edge_on_push(self.deviceID, self.masterDevice.deviceID, drafter.canvas, drafter.configuration)
                 self.masterDevice.sendTask(subtasks.pop(0))
             if self.masterDevice is None and subtasks: # TODO: remove and make them on hold until there is some free space?
                 sub = subtasks.pop(0)

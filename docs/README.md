@@ -33,7 +33,7 @@ Devices are grouped into 4 categories:
 
 General structure of network looks as follows (from top to bottom):
 
-WSTAW OBRAZEK Z DRZEWEM
+![Image representing hierarchy of devices]()
 
 Every camera has exactly one server as it's parent.
 
@@ -123,6 +123,6 @@ with one difference - they tell about communication with device's parent.
 
 We decided that good measure of effectiveness of our algorithm will be average usage of computational power of devices in the network.
 
-WRITE SOMETHING MORE
+TO DO: write something more about it and insert plots
 
 ![Plot representing statistics]()

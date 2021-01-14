@@ -78,7 +78,34 @@ Visualization
 Technology
 ----------
 
-WRITE SOMETHING ABOUT LIBRARY AND STUFF
+For visualization tkinter package is used. It was chosen for easy and simple API and because it comes with most Linux platforms as well as Windows.
+Window and canvas setup and initialization are done in Drafter class constructor in node_draw.py file. Moreover node_draw.py includes API for drawing.
+
+node_draw.py API:
+
+- draw_configuration() - draws entire configuration
+    - allows to draw configuration without cloud with only components of cities and / or districts
+    - allows to draw configuration of entire cloud alongside with components not connected to cloud
+- draw_cloud() - draws entire configuration of cloud with children components
+    - allows to draw configuration with components of districts directly connected to the cloud
+    - aligns its children component in a circular way leaving for cities components more space and adding space after each city component
+- draw_cities_components() - draws configuration of all cities components
+    - its used outside draw_cloud() function for drawing cities components not connected to cloud
+    - aligns components in a circular way
+- draw_districts_components() - draws configuration of all districts components
+    - its used outside draw_cloud() function for drawing districts components not connected to cloud
+    - aligns components in a circular way
+- draw_cities_component() - draws entire configuration of component of cities connected with each other
+    - it draws all components of districts connecting each component with corresponding city node
+    - it allows to draw configuration with multiple components of districts connected to one city node
+    - additional parameter was introduced to avoid overlapping lines by rotating entire component with children components
+- draw_component() - draws entire configuration of component of nodes connected with each other
+    - node can be a city node or a district node
+    - nodes are being aligned in a circular way allowing to draw any number of nodes and connections without overlapping lines
+- remaining functions can be grouped in 3 categories:
+    - low-level canvas drawing - drawing circles, wheels, lines and connections
+    - high-level canvas objects parameter changing functions - changing colors accordingly to nodes state
+    - auxiliary functions
 
 Examples
 --------

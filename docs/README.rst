@@ -85,6 +85,8 @@ Examples
 
 INSERT SOME PHOTOS
 
+<img src="IoT-graph-representing-network.png">
+
 Some statistics
 ===============
 

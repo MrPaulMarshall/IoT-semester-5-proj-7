@@ -18,17 +18,17 @@ class Device:
     #   miasto -> cloud
 
     def __init__(self, deviceID, computingPower, masterDevice):
-        """Tworzy nowe urządzenie\n
-        Parametry: 
-        deviceID (string): Unikalne ID urządzenie\n
-        computingPower (int): Moc obliczeniowa urządzenia
+        """Creates new device\n
+        Parameters: 
+        deviceID (string): Unical ID\n
+        computingPower (int): Maximum computing power od the device
         """
         self.deviceID = deviceID
         self.maxComputingPower = computingPower
         self.currentComputingPower = computingPower
         self.masterDevice = masterDevice
         self.neighbourDevices = []
-
+        self.usedPower = 0
         # slownik {task: przyznanaMocObliczeniowa}
         self.tasksToCompute = {}
         # slownik {task: [subtask1, subtask2 ..]}, sluzy do zbierania wynikow z rozeslanych taskow
@@ -38,15 +38,16 @@ class Device:
         return "Id: " + str(self.deviceID)  # + " currentComputingPower: " + str(self.currentComputingPower)
 
     def compute(self):
-        """Wykonuje zadania przypisane do urządzenia\n
-        Po wykonaniu części zadania przesyła wynik do urządzenia od którego zadanie otrzymała\n
-        Po wykonaniu całości zadania wypisuje stosowny komunikat
+        """Performs tasks assign to the device\n
+        After completing part of the task it sends the output to the source device\n
+        After completeng whole task it prints message
         """
         drafter = Drafter.get_instance(None)
 
         if len(self.tasksToCompute) != 0:
             for task in self.tasksToCompute:
-                task.compute(self.tasksToCompute[task])
+                self.usedPower += task.compute(self.tasksToCompute[task])
+
             finishedTasks = {k: v for k, v in self.tasksToCompute.items() if k.isCompleted()}
             for task in finishedTasks:
                 self.currentComputingPower += self.tasksToCompute[task]
@@ -68,11 +69,11 @@ class Device:
 
     def createTask(self, i):
         """
-        Tworzy nowe losowe zadanie oraz przypisuje je do urządzenia\n
-        Parametry: 
-        i (int): Mówi o historii dzielenia zadania\n
-        Zwraca:
-        Task: Stworzone zadanie
+        Creates new random task and assigns it to the device\n
+        Parameters: 
+        i (int): Tells about the division history of the task\n
+        Returns:
+        Task: Newly created task
         """
         taskID = randint(1, int(1e8))
         computingUnits = randint(50, 200)
@@ -81,11 +82,12 @@ class Device:
 
     def receiveResults(self, result):
         """
-        Funkcja która przyjmuje rezultat wykonanego zadania \n
-        Jeśli zadanie zostało zwrócone do urządzenia w którym zostało utworzone wypisze się stosowny komunikat\n
+        Function that receives resultat of the completed task\n
+        If this device is the source device function prints a message\n
         Funcja łączy też zakończone podzadania\n
-        Parametry: 
-        result (result): Rezultat wykonanego zadania
+        Function also joins compleated subtasks\n
+        Parameters: 
+        result (result): Task result
 
         """
         # gdy wynik wroci do kamery
@@ -113,12 +115,13 @@ class Device:
 
 
     def divideTask(self, task, chunkSizes):
-        """Dzieli zadanie na podzadania\n
-        Parametry: 
-        task (Task): zadanie do podzielenia\n
+        """Divide task and create subtasks\n
+        Parameters: 
+        task (Task): task to divide\n
         chunkSizes (List): Tablica liczb sumujących się do mocy potrzebnej na wykonanie całego zadania\n
-        Zwraca:
-        List: tablica podzielonych podzadań
+        chunkSizes (List): Array of numbers. Sum of the list must be equal to Task.computingUnits
+        Returns:
+        List: array of subtasks
         """
         if len(chunkSizes) == 0:
             return None
@@ -137,9 +140,10 @@ class Device:
         change_edge_on_push(self.deviceID, dev.deviceID, drafter.canvas, drafter.configuration)
 
     def sendTask(self, task):
-        """Funkcja dzieli i przydziela zadanie do urządzeń sąsiadujących. Gdy urządzenie jest w stanie samo wykonać zadanie nie przydziela go\n
-        Parametry: 
-        task (Task): Zadanie do wykonania
+        """
+        Function divides task and assigns the subtasks to the device neighbours (if its nessesary).\n
+        Parameters: 
+        task (Task): Task to compute
         """
         # gdy sam moze obliczyc
         if self.currentComputingPower > task.computingUnits/task.maxTime:
@@ -181,9 +185,9 @@ class Device:
                 self.receiveResults(sub)
 
     def receiveTask(self, task):
-        """Funkcja przypisuje zadanie do urządzenia.\n
-        Parametry: 
-        task (Task): Zadanie do wykonania
+        """Function assigns task to the device.\n
+        Parameters: 
+        task (Task): Task to assign
         """
         # przydziela moc obliczeniowa dla taska
         if self.currentComputingPower > task.computingUnits/task.maxTime:

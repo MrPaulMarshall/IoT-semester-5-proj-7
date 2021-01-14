@@ -7,6 +7,13 @@ from configuration import Configuration
 
 
 def load_districts_components(data, parent, devices, cameras):
+    """Loads district components\n
+    Parameters: data (str) JSON file\n
+    parent (Device): device "above" the dictrict that the dictrict is connected to\n
+    devices: (Dictionary): dictionary of all decives\n
+    cameras: (Dictionary): dictionary of all cameras\n
+    Returns (List): List of lists of district nodes
+    """
     districtsComponents= []
     for dc in data:
         districtsComponent = []
@@ -28,6 +35,15 @@ def load_districts_components(data, parent, devices, cameras):
 
 
 def load_cities_components(data, parent, devices, cameras):
+
+    """Loads city components\n
+    Parameters: data (str) JSON file\n
+    parent (Device): device "above" the city that the city is connected to\n
+    devices: (Dictionary): dictionary of all decives\n
+    cameras: (Dictionary): dictionary of all cameras\n
+    Returns (List): List of lists of city nodes
+    """
+    
     citiesComponents = []
     for cc in data:
         citiesComponent = []
@@ -45,6 +61,12 @@ def load_cities_components(data, parent, devices, cameras):
 
 
 def load_configuration(file: str):
+    """Loads configuration from a file\n
+    Parameters: 
+    file (str): path to JSON file\n
+    Returns:
+    (Configuration): configuration derived from the JSON file
+    """
     with open(file) as confFile:
         data = json.load(confFile)
         configuration = Configuration()

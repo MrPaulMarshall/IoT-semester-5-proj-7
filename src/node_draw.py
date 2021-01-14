@@ -19,6 +19,8 @@ class Drafter:
         return Drafter.__instance
 
     def __init__(self, conf):
+        """Initizlize Drafter\n
+        Parameters: conf (Configuration)"""
         Drafter.__instance = self
         root = tk.Tk()
         root.title('Multi-agent communication in IOT')
@@ -45,14 +47,21 @@ class Drafter:
 
 
 def plusCallback(canvas):
+    """Scale canvas up
+    Parameters: canvas (Canvas)"""
     canvas.scale('all', 0, 0, 1.1, 1.1)
 
 
 def minusCallback(canvas):
+    """Scale canvas down\n
+    Parameters: canvas (Canvas)"""
     canvas.scale('all', 0, 0, 0.9, 0.9)
 
 
 def calculateColor(val, min=0, max=120):
+    """Calculates the color of the component\n
+    Returns: (string) calculated color"""
+
     hue = ((val * (max - min)) + min)/360
     c = cs.hsv_to_rgb(hue, 1, 1)
     c = [int(el * 255) for el in c]
@@ -60,22 +69,27 @@ def calculateColor(val, min=0, max=120):
 
 
 def change_edge_on_push(deviceId1: int, deviceId2: int, canvas: tk.Canvas, configuration: Configuration):
+    """Changes edge color to E8B135\n"""
     change_edge_color('#E8B135', deviceId1, deviceId2, canvas, configuration)
 
 
 def change_edge_on_pull(deviceId1: int, deviceId2: int, canvas: tk.Canvas, configuration: Configuration):
+    """Changes edge color to 00349E\n"""
     change_edge_color('#00349E', deviceId1, deviceId2, canvas, configuration)
 
 
 def change_node_on_push(deviceId: int, canvas: tk.Canvas, configuration: Configuration):
+    """Changes node color to #E8B135\n"""
     change_ring_color('#E8B135', deviceId, canvas, configuration)
 
 
 def change_node_on_pull(deviceId: int, canvas: tk.Canvas, configuration: Configuration):
+    """Changes node color to #00349E\n"""
     change_ring_color('#00349E', deviceId, canvas, configuration)
 
 
 def change_node_color(color, deviceId: int, canvas: tk.Canvas, configuration: Configuration):
+    """Changes color of the node\n"""
     if type(color) is int:
         color = calculateColor(color)
     idx = configuration.get_node_idx(deviceId)
@@ -83,11 +97,13 @@ def change_node_color(color, deviceId: int, canvas: tk.Canvas, configuration: Co
 
 
 def change_ring_color(color: str, deviceId: int, canvas: tk.Canvas, configuration: Configuration):
+    """Changes color of the ring"""
     idx = configuration.get_node_idx(deviceId)
     canvas.itemconfig(idx, outline=color)
 
 
 def change_edge_color(color: str, deviceId1: int, deviceId2: int, canvas: tk.Canvas, configuration: Configuration):
+    """Changes color of the edge"""
     idx1 = configuration.get_node_idx(deviceId1)
     idx2 = configuration.get_node_idx(deviceId2)
     if idx1 and idx2:
@@ -98,16 +114,19 @@ def change_edge_color(color: str, deviceId1: int, deviceId2: int, canvas: tk.Can
 
 
 def draw_wheel(x: float, y: float, radius: float, color: str, canvas: tk.Canvas) -> int:
+    """Draws wheel"""
     wheel = canvas.create_oval(x - radius, y - radius, x + radius, y + radius, fill=color, outline='white', width=3)
     return wheel
 
 
 def draw_circle(x: float, y: float, radius: float, color: str, canvas: tk.Canvas) -> int:
+    """Draws circle"""
     circle = canvas.create_oval(x - radius, y - radius, x + radius, y + radius, outline=color, width=2)
     return circle
 
 
 def draw_wheels_in_circle(x: float, y: float, radius: float, num_of_wheels: int, canvas: tk.Canvas) -> []:
+    """Draws wheel in circle"""
     wheels = []
     if num_of_wheels == 1:
         wheel = draw_wheel(x, y, 10, 'green', canvas)
@@ -121,6 +140,7 @@ def draw_wheels_in_circle(x: float, y: float, radius: float, num_of_wheels: int,
 
 
 def get_object_coords(obj: int, canvas: tk.Canvas):
+    """Returns: (x,y) - coordinations of object"""
     coords = canvas.coords(obj)
     x = (coords[0] + coords[2]) / 2
     y = (coords[1] + coords[3]) / 2
@@ -128,6 +148,7 @@ def get_object_coords(obj: int, canvas: tk.Canvas):
 
 
 def get_oval_radius(obj: int, canvas: tk.Canvas):
+    """Returns: radius of object"""
     coords = canvas.coords(obj)
     x_rad = (coords[2] - coords[0]) / 2
     return x_rad
@@ -143,6 +164,11 @@ def get_rotation(x1, y1, x2, y2):
 
 
 def draw_connection(obj1: int, obj2: int, canvas: tk.Canvas):
+    """Draws connection between two objects\n
+    Parameters: obj1 (int) first object\n
+    obj2 (int) second object\n
+    canvas (tk.Canvas)
+    """
     if obj1 == obj2:
         return
     x1, y1 = get_object_coords(obj1, canvas)
@@ -167,6 +193,13 @@ def reset_colors(canvas: tk.Canvas, configuration: Configuration):
 
 
 def connect_children(deviceId: int, componentIdx: int, children: [], canvas: tk.Canvas, configuration: Configuration):
+    """Connects components\n
+    Parameters: deviceId (int) id of the device
+    componentIdx (int) idx of the component\n
+    children (List) list of children components\n
+    canvas (tk.Canvas)\n
+    configuration (Configuration) configuration to draw
+    """
     deviceIdx = configuration.get_node_idx(deviceId)
     edge_id = configuration.add_connection(deviceIdx, componentIdx)
     if edge_id:
@@ -180,6 +213,15 @@ def connect_children(deviceId: int, componentIdx: int, children: [], canvas: tk.
 
 def draw_component(x: float, y: float, radius: float, color: str, canvas: tk.Canvas, nodes: [DistrictNode],
                    configuration: Configuration, rotation):
+    """Draws single city component\n
+    Parameters: x (float) x-coordinate of the component\n
+    y (int) y-coordinate of the component\n
+    radius (float) radius of the component\n
+    color (string) color of the component
+    canvas (tk.Canvas)\n
+    nodes (List)\n
+    configuration (Configuration) configuration to draw\n
+    """
     num_of_nodes = len(nodes)
     if num_of_nodes == 1:
         wheel = draw_wheel(x, y, 10, color, canvas)
@@ -203,6 +245,14 @@ def draw_component(x: float, y: float, radius: float, color: str, canvas: tk.Can
 
 def draw_cities_component(x: float, y: float, radius: float, canvas: tk.Canvas, city_nodes: [CityNode],
                           configuration: Configuration, exclDirection):
+    """Draws single city component\n
+    Parameters: x (float) x-coordinate of the city\n
+    y (int) y-coordinate of the city\n
+    radius (float) radius of the main circle\n
+    canvas (tk.Canvas)\n
+    nodes (List)\n
+    configuration (Configuration) configuration to draw\n
+    """
     num_of_nodes = 0
     for city_node in city_nodes:
         num_of_nodes += len(city_node.districtsComponents)
@@ -222,6 +272,12 @@ def draw_cities_component(x: float, y: float, radius: float, canvas: tk.Canvas, 
 
 
 def draw_cloud(x: int, y: int, configuration: Configuration, canvas: tk.Canvas):
+    """Draws central cloud on the canvas\n
+    Parameters: x (int) x-coordinate of the cloud\n
+    y (int) y-coordinate of the cloud\n
+    configuration (Configuration) configuration to draw\n
+    canvas (tk.Canvas)
+    """
     wheel = draw_wheel(x, y, 10, 'green', canvas)
     circle = draw_circle(x, y, 30, 'darkviolet', canvas)
     configuration.add_node_to_idx(configuration.cloud.device.deviceID, wheel)
@@ -244,6 +300,12 @@ def draw_cloud(x: int, y: int, configuration: Configuration, canvas: tk.Canvas):
 
 
 def draw_cities_components(x: int, y: int, citiesComponents, configuration: Configuration, canvas: tk.Canvas):
+    """Draws configuration of the city on the canvas\n
+    Parameters: x (int) x-coordinate of the city components\n
+    y (int) y-coordinate of the city components\n
+    configuration (Configuration) configuration to draw\n
+    canvas (tk.Canvas)
+    """
     radius = 80
     component_radius = 3 * radius
     num_of_components = len(citiesComponents)
@@ -254,6 +316,12 @@ def draw_cities_components(x: int, y: int, citiesComponents, configuration: Conf
 
 
 def draw_districts_components(x: int, y: int, districtsComponents, configuration: Configuration, canvas: tk.Canvas):
+    """Draws configuration of the district on the canvas\n
+    Parameters: x (int) x-coordinate of the district components\n
+    y (int) y-coordinate of the district components\n
+    configuration (Configuration) configuration to draw\n
+    canvas (tk.Canvas)
+    """
     radius = 80
     component_radius = 3 * radius
     num_of_components = len(districtsComponents)
@@ -264,6 +332,10 @@ def draw_districts_components(x: int, y: int, districtsComponents, configuration
 
 
 def draw_configuration(configuration: Configuration, canvas: tk.Canvas):
+    """Draws initial configuration on the canvas\n
+    Parameters: configuration (Configuration) configuration to draw\n
+    canvas (tk.Canvas)
+    """
     x = 300
     y = 500
     transX = 0

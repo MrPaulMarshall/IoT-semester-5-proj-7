@@ -33,7 +33,7 @@ Devices are grouped into 4 categories:
 
 General structure of network looks as follows (from top to bottom):
 
-![Image representing hierarchy of devices]()
+![Image representing hierarchy of devices](structure-of-network.png)
 
 Every camera has exactly one server as it's parent.
 

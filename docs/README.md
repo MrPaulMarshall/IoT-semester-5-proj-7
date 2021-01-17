@@ -65,6 +65,11 @@ Our algorithm is as follows:
 
 - after result is ready (either generated or combined from parts) it is send back to its source device
 
+## Command line options
+-p path Path to json configuration file
+-t time The amount of time the simulation waits after each step.
+-c cycles The amount of cycles the simulation will perform.
+
 ## Visualization
 
 ### Technology
@@ -123,6 +128,4 @@ with one difference - they tell about communication with device's parent.
 
 We decided that good measure of effectiveness of our algorithm will be average usage of computational power of devices in the network.
 
-TO DO: write something more about it and insert plots
-
-![Plot representing statistics]()
+Statistics will be printed in the terminal after the simulation ends.

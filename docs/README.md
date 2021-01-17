@@ -66,10 +66,11 @@ Our algorithm is as follows:
 - after result is ready (either generated or combined from parts) it is send back to its source device
 
 ## Command line options
--p path Path to json configuration file
--t time The amount of time the simulation waits after each step.
--c cycles The amount of cycles the simulation will perform.
+-p path     &nbsp; Path to json configuration file.
 
+-t time     &nbsp; The amount of time the simulation waits after each step.
+
+-c cycles   &nbsp; The amount of cycles the simulation will perform.
 ## Visualization
 
 ### Technology
